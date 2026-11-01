@@ -1,0 +1,9 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "../../../packages/adapters/src/media/layout-check/**/*.ts",
+    "../../../packages/storage/src/article-layout/check-journal.ts",
+    "../../../packages/storage/src/article-layout/proof.ts",
+    "./*.ts"
+  ]
+}

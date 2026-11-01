@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "personal-ip-workbench": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/server/server.mjs"
+      ],
+      "env": {
+        "WORKBENCH_EXPECTED_HOST_SURFACES": "claude_cowork,claude_code"
+      }
+    }
+  }
+}

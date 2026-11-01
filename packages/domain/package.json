@@ -1,0 +1,44 @@
+{
+  "name": "@workbench/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./ports": "./src/ports/index.ts",
+    "./documents": "./src/documents/index.ts",
+    "./topics": "./src/topics/index.ts",
+    "./topic-preparation": "./src/topic-preparation/index.ts",
+    "./identity": "./src/identity/index.ts",
+    "./settings": "./src/settings/index.ts",
+    "./jobs": "./src/jobs/index.ts",
+    "./result-commit": "./src/result-commit/index.ts",
+    "./sources": "./src/sources/index.ts",
+    "./knowledge-index": "./src/knowledge-index/index.ts",
+    "./works": "./src/works/index.ts",
+    "./metrics": "./src/metrics/index.ts",
+    "./comparisons": "./src/comparisons/index.ts",
+    "./service-agent": "./src/service-agent/index.ts",
+    "./daily-plans": "./src/daily-plans/index.ts",
+    "./retro": "./src/retro/index.ts",
+    "./business-outcomes": "./src/business-outcomes/index.ts",
+    "./content-agents": "./src/content-agents/index.ts",
+    "./recommendations": "./src/recommendations/index.ts",
+    "./knowledge-generation": "./src/knowledge-generation/index.ts",
+    "./host-runs": "./src/host-runs/index.ts",
+    "./content-plans": "./src/content-plans/index.ts",
+    "./production-plans": "./src/production-plans/index.ts",
+    "./artifact-execution": "./src/artifact-execution/index.ts",
+    "./publications": "./src/publications/index.ts",
+    "./schedules": "./src/schedules/index.ts",
+    "./publishing-settings": "./src/publishing-settings/index.ts",
+    "./skills": "./src/skills/index.ts"
+  },
+  "dependencies": {
+    "@workbench/contracts": "workspace:*",
+    "@workbench/storage": "workspace:*",
+    "@workbench/adapters": "workspace:*"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@workbench/service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "node src/main.ts"
+  },
+  "dependencies": {
+    "@workbench/adapters": "workspace:*",
+    "@workbench/contracts": "workspace:*",
+    "@workbench/domain": "workspace:*",
+    "@workbench/storage": "workspace:*",
+    "undici": "8.11.2"
+  }
+}

@@ -1,0 +1,6 @@
+import type { ReportGenerationRequest, GenerationAccepted } from '@workbench/contracts';
+import type { FeatureContext } from '../../../transport/feature-ports.ts';
+import { candidateForJob, waitForegroundGeneration, readForegroundResult } from '../../create/ai-actions/index.ts';
+export function createRetroReportsApi(context: FeatureContext) {
+  return { async generate(input: ReportGenerationRequest) { const accepted = await context.client.request<GenerationAccepted>('POST', '/api/v1/retro-reports', input, { signal: context.signal, idempotencyKey: crypto.randomUUID() }); if (!await waitForegroundGeneration(context, accepted, '生成复盘报告候选', () => context.ui.page === 'retro', true)) return undefined; const candidate = await readForegroundResult(context, accepted, () => candidateForJob(context, accepted.document_id!, accepted.job_id), () => context.ui.page === 'retro'); return candidate ? { ...accepted, candidate } : undefined; }, async adopt(candidateId: string, baseRevision: string | null) { return context.client.request('POST', '/api/v1/candidates/'+encodeURIComponent(candidateId)+'/adoption', { expected_revision_id: baseRevision }, { signal: context.signal, idempotencyKey: crypto.randomUUID() }); } };
+}

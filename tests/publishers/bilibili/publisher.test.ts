@@ -1,0 +1,4 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {BilibiliPublisher} from '../../../packages/adapters/src/publishers/bilibili/index.ts';
+test('官方页面壳不能视为完整投稿/查询合同；B站所有port方法0网络blocked且不编造draft/work',async()=>{const publisher=new BilibiliPublisher();assert.equal((await publisher.describe()).every(c=>c.status==='unverified'),true);for(const operation of ['validateInput','prepareDraft','submit','queryResult'] as const)await assert.rejects(()=>publisher[operation]({platform:'bilibili',format:'long_video'} as never),(e:unknown)=>!!e&&typeof e==='object'&&'code' in e&&e.code==='CAPABILITY_UNVERIFIED'&&'details' in e&&(e.details as {network_calls:number}).network_calls===0);await assert.rejects(()=>publisher.submit({platform:'bilibili',format:'article'} as never),{code:'CAPABILITY_UNSUPPORTED'});});

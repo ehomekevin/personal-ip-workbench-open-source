@@ -1,0 +1,23 @@
+import { readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { ContractError } from '@workbench/contracts';
+import { parseConnectionDescriptor } from '../../../plugins/shared/connection.ts';
+import { BoundServiceClient } from './service-client.ts';
+import { createWorkbenchMcpServer } from './server.ts';
+
+const surfaces = (process.env.WORKBENCH_EXPECTED_HOST_SURFACES ?? process.env.WORKBENCH_EXPECTED_HOST_SURFACE ?? '').split(',').filter(Boolean);
+const profile = process.env.WORKBENCH_CONNECTION_PROFILE ?? (surfaces.length === 1 ? surfaces[0]! : 'claude-plugin');
+if (!/^[a-z][a-z0-9_-]{0,63}$/.test(profile)) throw new ContractError('VALIDATION_ERROR', '连接 profile 无效');
+const connectionPath = process.env.WORKBENCH_CONNECTION_PATH ?? join(homedir(), '.config/personal-ip-workbench/connections', profile + '.json');
+const descriptor = parseConnectionDescriptor(JSON.parse(readFileSync(connectionPath, 'utf8')));
+if (surfaces.length && !surfaces.includes(descriptor.host.surface)) throw new ContractError('WORKSPACE_INSTANCE_MISMATCH', '插件入口与固定宿主 surface 不一致');
+const uiPath = process.env.WORKBENCH_UI_PATH ?? fileURLToPath(new URL('../ui/workbench.html', import.meta.url));
+const uiHtml = readFileSync(uiPath, 'utf8');
+await new BoundServiceClient(descriptor).identity();
+const server = createWorkbenchMcpServer({ descriptor, uiHtml });
+await server.connect(new StdioServerTransport());
+process.once('SIGTERM', () => { void server.close(); });
+process.once('SIGINT', () => { void server.close(); });

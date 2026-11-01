@@ -1,0 +1,17 @@
+import { SkillRouteSchema } from './skills.ts';
+import { objectSchema, CreateTopicSchema } from './validation.ts';
+import { CreateAccountSchema } from './sources.ts';
+import { ContractError } from './errors.ts';
+import { PLATFORMS, FORMATS } from './common.ts';
+import type { CreateVariantRequest } from './requests.ts';
+import type { DocumentGenerationRequest, VariantGenerationRequest, TopicRecommendationRequest, AccountRecommendationRequest, ResearchRequest, WikiGenerationRequest, ReportGenerationRequest, RecommendationAdoptionRequest } from './generation.ts';
+const id={type:'string',minLength:1},nullable={type:['string','null'],minLength:1},ids={type:'array',maxItems:100,items:id},executor={type:'string',enum:['codex','claude']};
+export const DocumentGenerationSchema=objectSchema<DocumentGenerationRequest>(['base_revision_id','source_ids','instruction','executor'],{base_revision_id:nullable,source_ids:ids,instruction:id,executor,skill_route:SkillRouteSchema.jsonSchema},value=>{if(value.skill_route!==undefined)SkillRouteSchema.parse(value.skill_route);});
+export const VariantGenerationSchema=objectSchema<VariantGenerationRequest>(['core_revision_id','base_revision_id','mode','source_ids','executor'],{core_revision_id:id,base_revision_id:nullable,mode:{type:'string',enum:['initialize','candidate']},source_ids:ids,executor,skill_route:SkillRouteSchema.jsonSchema},value=>{if(value.skill_route!==undefined)SkillRouteSchema.parse(value.skill_route);});
+export const TopicRecommendationSchema=objectSchema<TopicRecommendationRequest>(['source_ids','action_ids','executor'],{source_ids:ids,action_ids:ids,executor});
+export const AccountRecommendationSchema=objectSchema<AccountRecommendationRequest>(['positioning','platforms','source_ids','executor'],{positioning:id,platforms:{type:'array',minItems:1,maxItems:5,items:{type:'string',enum:PLATFORMS}},source_ids:ids,executor});
+export const ResearchSchema=objectSchema<ResearchRequest>(['source_record_ids','executor'],{source_record_ids:ids,executor,input_version:{type:'string',pattern:'^[a-f0-9]{64}$'},skill_route:SkillRouteSchema.jsonSchema},value=>{if(value.skill_route!==undefined)SkillRouteSchema.parse(value.skill_route);});
+export const WikiGenerationSchema=objectSchema<WikiGenerationRequest>(['evidence_ids','target_document_id','base_revision_id','executor'],{evidence_ids:ids,target_document_id:id,base_revision_id:nullable,executor,skill_route:SkillRouteSchema.jsonSchema},value=>{if(value.skill_route!==undefined)SkillRouteSchema.parse(value.skill_route);});
+export const ReportGenerationSchema=objectSchema<ReportGenerationRequest>(['comparison_run_id','source_ids','executor'],{comparison_run_id:id,source_ids:ids,executor,skill_route:SkillRouteSchema.jsonSchema},value=>{if(value.skill_route!==undefined)SkillRouteSchema.parse(value.skill_route);});
+export const RecommendationAdoptionSchema=objectSchema<RecommendationAdoptionRequest>([],{topic:CreateTopicSchema.jsonSchema,account:CreateAccountSchema.jsonSchema},value=>{if('topic' in value&&'account' in value)throw new ContractError('VALIDATION_ERROR','推荐只能采用为一个目标');if(value.topic)CreateTopicSchema.parse(value.topic);if(value.account)CreateAccountSchema.parse(value.account);});
+export const CreateVariantSchema=objectSchema<CreateVariantRequest>(['platform','format'],{platform:{type:'string',enum:PLATFORMS},format:{type:'string',enum:FORMATS},variant_key:id});

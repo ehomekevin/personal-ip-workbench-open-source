@@ -1,0 +1,53 @@
+{
+  "name": "personal-ip-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": "26.9.0",
+    "pnpm": "10.32.1"
+  },
+  "scripts": {
+    "preinstall": "node scripts/probes/runtime/guard.ts",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm test:portable",
+    "test:wp07": "node --test tests/foundation/wp-07/*.test.ts",
+    "check:baseline": "node scripts/ci/verify-inputs.ts",
+    "test:transport": "node --test tests/ui-fidelity/transport.test.ts",
+    "test:portable": "node --experimental-test-module-mocks --import ./tests/helpers/portable-storage.ts --test --test-concurrency=1 tests/ci/*.test.ts tests/ui-fidelity/transport.test.ts tests/foundation/wp-07/D07-006/*.test.ts tests/foundation/wp-07/D07-007/*.test.ts tests/foundation/wp-07/D07-008/*.test.ts tests/hosts/*/*.test.ts tests/service-agent/writing-skill.test.ts tests/ui-fidelity/generation-progress.test.ts tests/service-agent/api-recovery.test.ts",
+    "typecheck:ci": "tsc --noEmit -p tsconfig.ci.json",
+    "test:integration": "node scripts/ci/integration.ts",
+    "test:jobs": "node --test --test-concurrency=1 tests/job-recovery/*.test.ts",
+    "test:e2e": "node scripts/ci/e2e.ts --scope local",
+    "test:e2e:portable": "node scripts/ci/e2e.ts --scope portable",
+    "ci:check": "node scripts/ci/check.ts",
+    "verify:local": "node scripts/ci/check.ts --local",
+    "build:foundation": "pnpm --filter @workbench/contracts typecheck && pnpm --filter @workbench/domain typecheck && pnpm --filter @workbench/storage typecheck && pnpm --filter @workbench/service typecheck",
+    "dev:service": "pnpm --filter @workbench/service dev",
+    "dev:web": "pnpm --filter @workbench/web dev",
+    "build:web": "pnpm --filter @workbench/web build",
+    "build:plugins": "node scripts/ci/build-plugins.ts",
+    "dev:mcp": "node .ci-artifacts/plugins/shared/server/server.mjs",
+    "test:plugins": "node --test --test-concurrency=1 --test-timeout=120000 tests/mcp-bridge/*.test.ts tests/publishers/*/*.test.ts tests/foundation/wp-07/D07-009/*.test.ts",
+    "test:e2e:plugins": "node scripts/ci/plugin-e2e.ts",
+    "test:e2e:interactions": "node tests/ui-fidelity/generation-progress.browser.ts && node tests/ui-fidelity/batch-dismiss.browser.ts && node scripts/ci/operations-flow-e2e.ts",
+    "init:workspace": "node scripts/runtime/init-workspace.ts",
+    "check:source": "node scripts/ci/verify-inputs.ts"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  },
+  "license": "MIT"
+}

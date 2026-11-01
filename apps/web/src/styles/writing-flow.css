@@ -1,0 +1,15 @@
+.writing-flow-panel .panel-head{gap:10px;align-items:flex-start}.writing-flow-panel .panel-head h2{font-size:18px;white-space:nowrap}.writing-flow-panel .tag{white-space:normal;text-align:right}.writing-flow-panel .panel-body>.button{margin:8px 8px 0 0;font-size:12px;padding:9px 14px}.writing-flow-state{margin:16px 0 6px}.writing-flow-steps{display:flex;flex-wrap:wrap;gap:10px 18px;margin:0 0 24px;color:var(--navy);font-size:12px}.writing-flow-steps span{border-bottom:3px solid var(--lime);padding-bottom:6px}.writing-finding{border:1px solid var(--line);border-radius:14px;padding:16px;margin:20px 0}.writing-finding p{font-size:13px;line-height:1.8;margin:12px 0}.writing-finding blockquote{border-left:3px solid var(--lime);padding:10px 14px;background:var(--mist);font-size:13px;line-height:1.8;white-space:pre-wrap;margin-bottom:16px}.writing-finding label{display:block;font-size:12px;margin:12px 0 8px}.writing-rule-snapshot{margin:24px 0}.writing-rule-snapshot details{margin:12px 0}.writing-rule-snapshot pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.8 var(--sans);background:var(--mist);padding:14px;border-radius:10px}.dialog-body>details{margin:20px 0}.dialog-body>details summary{font-size:13px;cursor:pointer}
+
+.viewpoints-panel{padding:20px 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.viewpoints-panel h3{margin:0;font:500 17px/1.6 var(--sans);color:var(--ink)}
+.viewpoints-panel .fine{line-height:1.8;overflow-wrap:anywhere}
+.viewpoints-panel .button-row{margin:12px 0;flex-wrap:wrap}
+.viewpoints-panel .button{min-height:44px}
+.viewpoints-text{line-height:1.8;resize:vertical;min-height:140px;max-width:100%}
+.core-empty-note{padding:16px 24px 0}
+.core-empty-note h3{font:500 16px/1.6 var(--sans)}
+.core-empty-note p{font-size:12px;line-height:1.8;color:var(--muted)}
+.core-empty-note+.core-editor{min-height:160px}
+.writing-rule-snapshot pre,.social-preview{overflow-wrap:anywhere}
+@media(max-width:600px){.viewpoints-panel{padding:18px}.viewpoints-panel>.row{align-items:flex-start;flex-direction:column;gap:4px}.viewpoints-panel .button-row{gap:8px}.viewpoints-panel .button{padding-inline:12px}.core-empty-note{padding-inline:18px}}
+.writing-flow-limits{margin-top:var(--space-3)}

@@ -1,0 +1,117 @@
+{
+  "personal-ip-writing": {
+    "sha256": "ee87586a91d05df0677a875ba913f523f007558aa93e616df3630427e0ca2f4a",
+    "selection": "default",
+    "reason": "最贴合 AI 实测、资讯与本人思考；含归属保护、具体叙事和对照改稿。依赖参考须冻结后提炼。"
+  },
+  "personal-ip-operations": {
+    "sha256": "0bd9e96d901aa9cfbcc3c330584290ceca9fc5aa7c7d7e48607b9afcc6751897",
+    "selection": "default",
+    "reason": "贴合本人排期、对标与数据复盘；区分指标口径、观察窗口和本人/外部素材。"
+  },
+  "personal-ip-visuals": {
+    "sha256": "5adbfcd9c5a0890ed96b248155e1856654ff2877db9560bff1edbd2616bf3bdf",
+    "selection": "default",
+    "reason": "已有账号品牌与配图分工，优先用于品牌配图；不替代视频独立封面流程。"
+  },
+  "shengcai-essence-writer": {
+    "sha256": "993531947bc68bd9cb72ca5b91d00e08a8077defca70d453c2440e5db1c40109",
+    "selection": "manual",
+    "reason": "完整但专为生财社区设计，默认结尾讨论问题不适合每个平台；社区稿按需选用。"
+  },
+  "general-video": {
+    "sha256": "23ac61f3fd8d43c00864b6bce0cd8499f7b6742c5acb8c0a18268e35bd8ed73c",
+    "selection": "manual",
+    "reason": "完整的 HyperFrames 综合流程，依赖多层技能与工具；特效合成时手动选用，教程剪辑默认用专项技能。"
+  },
+  "cheat-on-content": {
+    "sha256": "448487a34a68aff79df3a060bf801939ab90bcb2db5a1bfac932cffdb12a5b31",
+    "selection": "manual",
+    "reason": "预测校准方法完整，但当前 rubric 偏观点视频，需单独初始化与预测闭环；不默认接管现有工作台。"
+  },
+  "h3-voice-clone": {
+    "sha256": "42f2d50f360b4e8b8fb402b3db779429dbc6350580daac83a5fcac90087d2abe",
+    "selection": "default",
+    "reason": "专职筛选本人声音参考，输入、质量与产物规则明确；只在缺有效参考时触发。"
+  },
+  "h3-voice-production": {
+    "sha256": "10f96d59c6c92e99ac00a93d94d3374d725c24ffa4c3b18b51026e4f54e2d0a1",
+    "selection": "default",
+    "reason": "专职 H3 口播音轨，保留真实断句、声音参考与试听依赖。"
+  },
+  "h3-digital-human": {
+    "sha256": "81134f4badc1f0416f6f02360ebc0766a40306f663f276222341bcf4f47b9b05",
+    "selection": "default",
+    "reason": "专职 H3 数字人口播，依赖已通过音轨与本人形象参考，避免和声音制作混为一体。"
+  },
+  "minimax-broll-generator": {
+    "sha256": "efd028bf2aba7f5e59324e4295dbeb35a9cfc6b64793cfe950c35bda92bc8b34",
+    "selection": "default",
+    "reason": "具备逐段路由、真实证据画面分流、时间戳和原音保留，适合口播配画面；工具尚待接线。"
+  },
+  "jianying-ai-tutorial-editor": {
+    "sha256": "d8411d506d4c356ba27f9173bfc9204fa1d116ac861796bf1dfd466f7436a609",
+    "selection": "default",
+    "reason": "AI 教程专项，输入、编辑计划、时间轴和剪映交付明确；最终编辑与导出仍需实际工具。"
+  },
+  "short-video-bgm": {
+    "sha256": "980519590b07335c3d2376866d45dc42e7dff4a3e2867a91468f966db4fccce7",
+    "selection": "default",
+    "reason": "专职口播配乐，依据实际音轨与段落安排；不替代剪辑或声音制作。"
+  },
+  "short-video-review": {
+    "sha256": "880b07fc8b39c93b38d92d6b4b0cc90a95cc5019b8d6d7fc5e25a1c3b6b80f63",
+    "selection": "default",
+    "reason": "依据最终导出连续看听，检查声画与素材；比只读任务契约的入口更适合成片审查。"
+  },
+  "qiuzhi-cover": {
+    "sha256": "6576e9e64a1f934928b1e23af532bbb74c9d5e6026c0937197574e6cfc2a5874",
+    "selection": "default",
+    "reason": "专职视频独立封面，含横竖样本、身份与看点约束；不替代正文品牌配图。"
+  },
+  "ipos-draft": {
+    "sha256": "eaa764405ed4951fd7d96d7a606aa094dd4df1e1ec94ab73b51c05447af10d87",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-brief": {
+    "sha256": "f4a8dc8729f16477b8b90ceee73095d5e90df0a3700d837269db97b24e179c6e",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-revise": {
+    "sha256": "01222befafd1637c822a17f3a87d92387dda543f895d344d73521ebd9066d009",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-review": {
+    "sha256": "299962f75bb7033f6a320d61d0128dcb8da5e2fbc394cf63b4ecfbeb447663cb",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-image-brief": {
+    "sha256": "af30ce7a7dd6e65116f0cbc8c9de1e011e5021bd47d743d550598359e76b6863",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-precheck": {
+    "sha256": "d0592b770d7ce7f30fa0bc6017dd4b3ef343790bc38211e2cd788c8574113d47",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-retro": {
+    "sha256": "2b4c9150f0d894c46bac162ff3fa6c6dcaaad5a733214a13bd7091d8f1740d4a",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-evolve": {
+    "sha256": "056c9eddf7ddb2f7f7bffe22ea8503a82fb121d7ced6a2ba03bcb964194aa899",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  },
+  "ipos-flow-spoken-douyin": {
+    "sha256": "69e00c36eceb79eb968d7ecb25cdd0e0ffa34ae53613baa6a738e0717c63037f",
+    "selection": "manual",
+    "reason": "当前本地文件是任务入口，需 task_get 取得正式规则与参数；不是自包含的同类完整技能。"
+  }
+}

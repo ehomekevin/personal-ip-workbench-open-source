@@ -1,0 +1,68 @@
+/* 独立实现：借鉴参考的柔和曲线与圆角形变，状态始终由运营投影提供。 */
+.operations-flow-slot{min-width:0;border-bottom:1px solid var(--line)}
+.operations-flow{position:relative;isolation:isolate;padding:20px 24px 24px;background:var(--surface);border-radius:var(--radius-md) var(--radius-md) 0 0;min-width:0;overflow:clip;transform-origin:top left}
+.operations-flow-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;min-width:0;margin-bottom:20px}
+.operations-flow-title{min-width:0}.operations-flow-title h2{font:400 19px/30px var(--font-display)}
+.operations-flow-title .operations-topic{margin-top:4px;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.operations-flow-actions{display:flex;align-items:center;gap:12px;flex:none}.operations-flow-current{font-size:11px;color:var(--navy);background:var(--lime-soft);border:1px solid var(--lime);border-radius:9999px;padding:5px 10px;white-space:nowrap}
+.operations-flow-dock-action,.operations-flow-return{display:none}
+.operations-flow-return{align-items:center;justify-content:center;gap:5px;min-height:44px;border:1px solid var(--line);border-radius:9999px;background:var(--surface);padding:6px 12px;font-size:11px;flex:none}
+.operations-flow-return svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.operations-flow-return:hover{background:var(--mist);border-color:var(--navy)}
+.operations-flow-track{position:relative;min-width:0}
+.operations-flow-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.operations-flow-lines path{fill:none;stroke:var(--line);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:2 6;vector-effect:non-scaling-stroke}
+.operations-flow-lines path.confirmed{stroke:var(--navy);stroke-dasharray:none;stroke-width:1.8}
+.operations-flow-lines path.recorded{stroke:var(--violet);stroke-dasharray:3 5;opacity:.55}
+.operations-flow-lines .operations-line-light{stroke:var(--lime);stroke-width:3;stroke-dasharray:10 110;filter:drop-shadow(0 0 3px #ccf866);animation:operations-line-arrive 920ms cubic-bezier(.25,.75,.25,1) both;animation-delay:var(--flow-delay,0ms)}
+.operations-flow .operations-steps{position:relative;z-index:1;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;margin:0;align-items:start}
+.operations-flow .operations-steps li{position:relative;align-items:center;text-align:center;gap:7px;padding:0 4px;color:var(--muted);min-width:0}
+.operations-flow .operations-steps li:nth-child(even){padding-top:16px}
+.operations-flow .operations-steps li>strong{font:500 12px/1.5 var(--font-sans);white-space:nowrap;color:var(--navy)}
+.operations-flow .operations-steps li>small{font-size:10px;line-height:1.5;min-height:15px;overflow-wrap:anywhere}
+.operations-flow .operations-steps li>.operations-step-mark{position:relative;width:32px;height:32px;flex:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:11px var(--font-mono);box-shadow:0 0 0 6px var(--surface);z-index:1}
+.operations-step-mark svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.operations-flow .operations-steps li.confirmed>.operations-step-mark{background:var(--lime);border-color:var(--lime);color:var(--navy)}
+.operations-flow .operations-steps li.confirmed>small{color:var(--navy)}
+.operations-flow .operations-steps li.recorded>.operations-step-mark{background:var(--mist);border-color:var(--line);color:var(--violet)}
+.operations-flow .operations-steps li.candidate>.operations-step-mark{background:var(--violet-soft);border-color:var(--violet);color:var(--violet)}
+.operations-flow .operations-steps li.current>.operations-step-mark{border-color:var(--navy);color:var(--navy);background:var(--lime-soft);box-shadow:0 0 0 4px var(--surface),0 0 0 6px var(--lime)}
+.operations-flow .operations-steps li.current>strong{font-weight:700}.operations-flow .operations-steps li.current>small{color:var(--navy)}
+.operations-flow .operations-steps li.pending:not(.current)>strong{color:var(--muted)}
+.operations-flow .operations-steps li.is-newly-confirmed>.operations-step-mark{animation:operations-confirm-arrive 800ms ease-out both;animation-delay:var(--flow-delay,0ms)}
+.operations-flow .is-newly-confirmed .operations-step-check path{stroke-dasharray:24;stroke-dashoffset:24;animation:operations-check-arrive 520ms cubic-bezier(.2,.75,.2,1) forwards;animation-delay:var(--flow-delay,0ms)}
+.operations-flow.is-docked{position:fixed;z-index:14;border:1px solid var(--line);border-radius:24px;padding:8px 20px 12px;box-shadow:0 8px 24px #0b1f521c;background:var(--surface);max-width:calc(100vw - 24px)}
+.operations-flow.is-docked .operations-flow-heading{margin-bottom:4px;gap:12px;min-height:36px}
+.operations-flow.is-docked .operations-flow-title{overflow:hidden;display:flex;align-items:center;gap:12px}
+.operations-flow.is-docked .operations-flow-title h2{font:400 14px/22px var(--font-display);flex:none;white-space:nowrap}
+.operations-flow.is-docked .operations-flow-title .operations-topic{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:220px;margin:0;line-height:1.5}
+.operations-flow.is-docked .operations-flow-current{display:none}
+.operations-flow.is-docked .operations-flow-dock-action{display:block}.operations-flow.is-docked .operations-flow-dock-action .button{font-size:11px;min-height:36px;padding:6px 12px}
+.operations-flow.is-docked .operations-flow-return{display:flex;min-height:36px}
+.operations-flow.is-docked .operations-steps{gap:12px}
+.operations-flow.is-docked .operations-steps li,.operations-flow.is-docked .operations-steps li:nth-child(even){padding:0 2px;gap:4px}
+.operations-flow.is-docked .operations-steps li:nth-child(even){padding-top:4px}
+.operations-flow.is-docked .operations-steps li>.operations-step-mark{width:24px;height:24px;font-size:10px;box-shadow:0 0 0 4px var(--surface)}
+.operations-flow.is-docked .operations-step-mark svg{width:16px;height:16px}
+.operations-flow.is-docked .operations-steps li.current>.operations-step-mark{box-shadow:0 0 0 3px var(--surface),0 0 0 4px var(--lime)}
+.operations-flow.is-docked .operations-steps li>strong{font-size:11px;line-height:14px}
+.operations-flow.is-docked .operations-steps li>small{display:none}
+@keyframes operations-line-arrive{0%{stroke-dashoffset:120;opacity:0}12%{opacity:1}85%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes operations-check-arrive{to{stroke-dashoffset:0}}
+@keyframes operations-confirm-arrive{0%{box-shadow:0 0 0 6px var(--surface),0 0 0 8px #ccf86600}35%{box-shadow:0 0 0 6px var(--surface),0 0 18px 6px #ccf86699}100%{box-shadow:0 0 0 6px var(--surface),0 0 0 10px #ccf86600}}
+@media(max-width:1000px){.operations-flow.is-docked .operations-topic{display:none}.operations-flow.is-docked .operations-flow-return span{display:none}.operations-flow.is-docked .operations-flow-return{width:36px;padding:6px}}
+@media(max-width:768px){
+ .operations-flow{padding:18px 20px 22px}.operations-flow-heading{align-items:flex-start;margin-bottom:20px;gap:12px}.operations-flow-actions{gap:8px}.operations-flow-current{font-size:10px;padding:4px 8px}
+ .operations-flow .operations-steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 16px}
+ .operations-flow .operations-steps li:nth-child(even){padding-top:0}.operations-flow .operations-steps li:nth-child(4){grid-column:3;grid-row:2}.operations-flow .operations-steps li:nth-child(5){grid-column:2;grid-row:2}.operations-flow .operations-steps li:nth-child(6){grid-column:1;grid-row:2}
+ .operations-flow.is-docked{padding:8px 12px 12px;border-radius:20px}.operations-flow.is-docked .operations-flow-title h2{font-size:12px}
+ .operations-flow.is-docked .operations-flow-heading{gap:8px;margin-bottom:6px;align-items:center}
+ .operations-flow.is-docked .operations-steps{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+ .operations-flow.is-docked .operations-steps li:nth-child(n){grid-column:auto;grid-row:auto;padding:0;gap:5px}
+ .operations-flow.is-docked .operations-steps li>strong{font-size:10px}
+ .operations-flow.is-docked .operations-flow-actions{gap:6px}.operations-flow.is-docked .operations-flow-dock-action .button{font-size:10px;min-height:44px;padding:6px 10px;max-width:160px;white-space:normal;line-height:1.5}
+ .operations-flow.is-docked .operations-flow-return{width:44px;min-height:44px}
+}
+@media(max-width:430px){.operations-flow{padding:18px 16px 22px}.operations-flow-title h2{font-size:15px;line-height:24px}.operations-flow-heading{gap:8px}.operations-flow-current{max-width:126px;white-space:normal;text-align:center}.operations-flow .operations-steps{gap:28px 8px}.operations-flow .operations-steps li>small{font-size:10px}.operations-flow.is-docked .operations-flow-title h2{font-size:11px}.operations-flow.is-docked .operations-flow-dock-action .button{max-width:142px;padding:6px 8px}.operations-flow.is-docked .operations-flow-actions{gap:4px}}
+@media(max-width:430px){.operations-flow.is-docked .operations-steps li>strong{max-width:28px;min-height:28px;white-space:normal;word-break:break-all;line-height:14px}}
+@media(prefers-reduced-motion:reduce){.operations-flow,.operations-flow *{animation:none!important;transition:none!important}.operations-flow-lines .operations-line-light{display:none}.operations-flow .operations-step-check path{stroke-dasharray:none;stroke-dashoffset:0}}

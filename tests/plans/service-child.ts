@@ -1,0 +1,11 @@
+import {readFileSync} from 'node:fs';
+import type {ServiceConfiguration} from '../../packages/contracts/src/index.ts';
+import {startApplication} from '../../apps/service/src/bootstrap/application.ts';
+import {createTopicsModule} from '../../apps/service/src/routes/topics.ts';
+import {createDocumentsModule} from '../../apps/service/src/routes/documents.ts';
+import {createContentPlansModule} from '../../apps/service/src/routes/content-plans.ts';
+import {createProductionPlansModule} from '../../apps/service/src/routes/production-plans.ts';
+const config=JSON.parse(readFileSync(process.argv[2]!,'utf8')) as ServiceConfiguration;
+const app=await startApplication(config,{port:0,moduleFactories:[createTopicsModule,createDocumentsModule,createContentPlansModule,createProductionPlansModule]});
+process.send?.({kind:'ready',pid:process.pid,port:app.address.port,boot_id:app.boot_id,schema_version:app.context.db.prepare('SELECT max(version) AS n FROM schema_migrations').get()!.n});
+process.once('SIGTERM',()=>{void app.close().then(()=>process.exit(0),error=>{process.send?.({kind:'error',message:String(error)});process.exit(1);});});

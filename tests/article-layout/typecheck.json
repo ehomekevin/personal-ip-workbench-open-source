@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
+    "erasableSyntaxOnly": false,
+    "noEmit": true
+  },
+  "include": [
+    "../../packages/contracts/src/article-layout.ts",
+    "../../packages/domain/src/article-layout/**/*.ts",
+    "../../packages/storage/src/article-layout/**/*.ts",
+    "../../packages/adapters/src/media/layout-check/**/*.ts",
+    "../../apps/web/src/features/media/article-layout/**/*.ts",
+    "../../apps/web/src/features/media/article-layout/**/*.tsx",
+    "ui/**/*.ts", "model/**/*.ts", "visual/**/*.ts"
+  ],
+  "exclude": ["**/.stage/**", "**/fixture-*/**", "**/.smoke-fixture/**"]
+}

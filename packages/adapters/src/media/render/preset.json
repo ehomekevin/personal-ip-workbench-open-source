@@ -1,0 +1,91 @@
+{
+  "version": "public-system-fonts/1",
+  "purpose": "Local render defaults; platform upload limits remain unverified",
+  "font": {
+    "heading": "system-ui",
+    "body": "system-ui",
+    "numeric": "monospace",
+    "policy": "system fonts; exact pixels may differ by operating system"
+  },
+  "image": {
+    "platform": "xiaohongshu",
+    "width": 1080,
+    "height": 1440,
+    "format": "png",
+    "color_space": "sRGB",
+    "platform_constraints": "unverified"
+  },
+  "article": {
+    "platform": "wechat",
+    "width": 800,
+    "height": 1100,
+    "encoding": "UTF-8",
+    "outputs": [
+      "markdown",
+      "html",
+      "pdf",
+      "zip"
+    ],
+    "platform_constraints": "unverified"
+  },
+  "thread": {
+    "platform": "x",
+    "encoding": "UTF-8",
+    "outputs": [
+      "json",
+      "text"
+    ],
+    "platform_constraints": "unverified"
+  },
+  "voice": {
+    "tool": "/usr/bin/say",
+    "voice": "Tingting (Chinese (China mainland))",
+    "rate": 205,
+    "source_kind": "system_tts",
+    "owner_voice": false
+  },
+  "video": [
+    {
+      "platform": "douyin",
+      "width": 720,
+      "height": 1280,
+      "fps": 25,
+      "codec": "libx264",
+      "crf": 23,
+      "pixel_format": "yuv420p",
+      "audio_codec": "aac",
+      "audio_rate": 48000,
+      "audio_channels": 2,
+      "audio_bitrate": "128k",
+      "loudness_target_lufs": -16,
+      "true_peak_dbtp": -1.5,
+      "subtitle_modes": [
+        "burned_raster",
+        "mov_text",
+        "srt_sidecar"
+      ],
+      "platform_constraints": "unverified"
+    },
+    {
+      "platform": "bilibili",
+      "width": 1280,
+      "height": 720,
+      "fps": 25,
+      "codec": "libx264",
+      "crf": 23,
+      "pixel_format": "yuv420p",
+      "audio_codec": "aac",
+      "audio_rate": 48000,
+      "audio_channels": 2,
+      "audio_bitrate": "128k",
+      "loudness_target_lufs": -16,
+      "true_peak_dbtp": -1.5,
+      "subtitle_modes": [
+        "burned_raster",
+        "mov_text",
+        "srt_sidecar"
+      ],
+      "platform_constraints": "unverified"
+    }
+  ]
+}

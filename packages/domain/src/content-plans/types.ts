@@ -1,0 +1,2 @@
+// D07-008：公开计划 DTO 由公共 contracts 唯一维护，领域只重导。
+export type {RendererIdentity,TextSegment,ContentAssetRef,ContentUnit,PlanContentFormat,ContentPlanFields,CreateContentPlanRequest,PatchContentPlanRequest,ProductionShot,VariantProductionFields,CreateVariantProductionPlanRequest,CreateFrozenProductionPlanRequest as CreateProductionPlanRequest,PatchVariantProductionPlanRequest,FrozenTextRef,FrozenAssetRef,FrozenShot,FrozenPlanInput,ResolvedPlanInput,ContentPlanSnapshot,ProductionPlanSnapshot,PlanExecutionState,PlanExecutionSnapshot,SanitizedPlanInput} from '@workbench/contracts';

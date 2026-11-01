@@ -1,0 +1,45 @@
+{
+  "manifest_version": "0.3",
+  "name": "personal-ip-workbench",
+  "display_name": "个人 IP 工作台",
+  "version": "0.1.0",
+  "description": "在 Claude Desktop chat 中打开同一七页面工作台。",
+  "author": {
+    "name": "ehomekevin"
+  },
+  "license": "LicenseRef-Private",
+  "tools_generated": true,
+  "server": {
+    "type": "node",
+    "entry_point": "server/server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/server.mjs"
+      ],
+      "env": {
+        "WORKBENCH_CONNECTION_PATH": "${user_config.connection_descriptor}",
+        "WORKBENCH_EXPECTED_HOST_SURFACES": "claude_desktop_chat"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=24.0.0"
+    }
+  },
+  "user_config": {
+    "connection_descriptor": {
+      "type": "file",
+      "title": "主服务连接描述文件",
+      "description": "选择外部连接流程建立的 JSON 文件；文件保留在插件目录之外。",
+      "required": true,
+      "multiple": false
+    }
+  }
+}

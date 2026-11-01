@@ -1,0 +1,20 @@
+{
+  "name": "personal-ip-workbench-private",
+  "interface": {
+    "displayName": "个人 IP 工作台（私有）"
+  },
+  "plugins": [
+    {
+      "name": "personal-ip-workbench",
+      "source": {
+        "source": "local",
+        "path": "./plugins/personal-ip-workbench"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

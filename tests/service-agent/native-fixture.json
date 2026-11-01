@@ -1,0 +1,647 @@
+{
+  "initialize": {
+    "userAgent": "synthetic-codex-protocol-fixture",
+    "codexHome": "/tmp/workbench-synthetic/home",
+    "platformFamily": "unix",
+    "platformOs": "linux"
+  },
+  "account/read": {
+    "account": {
+      "type": "chatgpt",
+      "email": "fixture@example.invalid",
+      "planType": "pro"
+    },
+    "requiresOpenaiAuth": true,
+    "workspaceRouting": {
+      "chatgptAccountId": "synthetic-chatgptAccountId",
+      "backendOrigin": "https://example.invalid",
+      "accountRoutingOverride": "synthetic-accountRoutingOverride"
+    }
+  },
+  "account/rateLimits/read": {
+    "ordinaryUsageAllowed": true,
+    "rateLimits": {
+      "limitId": "codex",
+      "limitName": null,
+      "normalModelSlug": null,
+      "primary": {
+        "usedPercent": 10,
+        "windowDurationMins": 10080,
+        "resetsAt": 1704067200
+      },
+      "secondary": null,
+      "credits": {
+        "hasCredits": true,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individualLimit": null,
+      "spendControlReached": false,
+      "planType": "pro",
+      "rateLimitReachedType": null
+    },
+    "rateLimitsByLimitId": {
+      "codex": {
+        "limitId": "codex",
+        "limitName": null,
+        "normalModelSlug": null,
+        "primary": {
+          "usedPercent": 10,
+          "windowDurationMins": 10080,
+          "resetsAt": 1704067200
+        },
+        "secondary": null,
+        "credits": {
+          "hasCredits": true,
+          "unlimited": false,
+          "balance": "0"
+        },
+        "individualLimit": null,
+        "spendControlReached": false,
+        "planType": "pro",
+        "rateLimitReachedType": null
+      }
+    },
+    "rateLimitResetCredits": null,
+    "accountId": "synthetic-accountId",
+    "rateLimitUpsell": null
+  },
+  "model/list": {
+    "data": [
+      {
+        "id": "gpt-6.1-sol",
+        "model": "gpt-6.1-sol",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": {
+          "message": "Synthetic protocol fixture value."
+        },
+        "displayName": "GPT-6.1-Sol",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "low",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": true
+      },
+      {
+        "id": "gpt-6-astra",
+        "model": "gpt-6-astra",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-6-Astra",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "medium",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      },
+      {
+        "id": "gpt-6-sol",
+        "model": "gpt-6-sol",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-6-Sol",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "medium",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      },
+      {
+        "id": "gpt-6-luna",
+        "model": "gpt-6-luna",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-6-Luna",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "medium",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      },
+      {
+        "id": "gpt-5.6-sol",
+        "model": "gpt-5.6-sol",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-5.6-Sol",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "low",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      },
+      {
+        "id": "gpt-5.6-terra",
+        "model": "gpt-5.6-terra",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-5.6-Terra",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "medium",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v2",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      },
+      {
+        "id": "gpt-5.6-luna",
+        "model": "gpt-5.6-luna",
+        "upgrade": null,
+        "upgradeInfo": null,
+        "availabilityNux": null,
+        "displayName": "GPT-5.6-Luna",
+        "description": "Synthetic protocol fixture value.",
+        "modelSpecialty": null,
+        "hidden": false,
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Synthetic protocol fixture value."
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultReasoningEffort": "medium",
+        "inputModalities": [
+          "text",
+          "image"
+        ],
+        "supportsPersonality": false,
+        "multiAgentVersion": "v1",
+        "additionalSpeedTiers": [
+          "fast"
+        ],
+        "serviceTiers": [
+          {
+            "id": "priority",
+            "name": "Fast",
+            "description": "Synthetic protocol fixture value."
+          }
+        ],
+        "defaultServiceTier": null,
+        "availableAccessPrograms": {
+          "cyber": [
+            "standard"
+          ]
+        },
+        "isDefault": false
+      }
+    ],
+    "nextCursor": null
+  },
+  "thread/start": {
+    "thread": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "environments": [
+        {
+          "environmentId": "local",
+          "cwd": "/tmp/workbench-synthetic/project",
+          "runtimeWorkspaceRoots": [
+            "/tmp/workbench-synthetic/project"
+          ]
+        }
+      ],
+      "extra": null,
+      "sessionId": "00000000-0000-4000-8000-000000000001",
+      "forkedFromId": null,
+      "parentThreadId": null,
+      "preview": "",
+      "ephemeral": false,
+      "section": null,
+      "sectionEnteredAt": null,
+      "projectId": null,
+      "historyMode": "paginated",
+      "modelProvider": "openai",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "xhigh",
+      "createdAt": 1704067200,
+      "updatedAt": 1704067200,
+      "recencyAt": 1704067200,
+      "status": {
+        "type": "idle"
+      },
+      "path": "/tmp/workbench-synthetic/session.jsonl",
+      "cwd": "/tmp/workbench-synthetic/project",
+      "cliVersion": "0.161.0",
+      "originator": "Codex Desktop",
+      "source": "vscode",
+      "canAcceptDirectInput": true,
+      "threadSource": null,
+      "agentNickname": null,
+      "agentRole": null,
+      "gitInfo": null,
+      "name": null,
+      "daybreakEnabled": null,
+      "turns": []
+    },
+    "model": "gpt-6.1-sol",
+    "modelProvider": "openai",
+    "serviceTier": "priority",
+    "disabledPluginIds": [],
+    "cwd": "/tmp/workbench-synthetic/project",
+    "runtimeWorkspaceRoots": [
+      "/tmp/workbench-synthetic/project"
+    ],
+    "instructionSources": [
+      "/tmp/workbench-synthetic/project"
+    ],
+    "approvalPolicy": "never",
+    "approvalsReviewer": "user",
+    "sandbox": {
+      "type": "readOnly",
+      "networkAccess": false
+    },
+    "activePermissionProfile": null,
+    "reasoningEffort": "xhigh",
+    "multiAgentMode": "explicitRequestOnly"
+  },
+  "turn/start": {
+    "turn": {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "items": [],
+      "itemsView": "notLoaded",
+      "status": "inProgress",
+      "error": null,
+      "startedAt": null,
+      "completedAt": null,
+      "durationMs": null
+    }
+  },
+  "turn/started": {
+    "threadId": "00000000-0000-4000-8000-000000000001",
+    "turn": {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "items": [],
+      "itemsView": "notLoaded",
+      "status": "inProgress",
+      "error": null,
+      "startedAt": 1704067200,
+      "completedAt": null,
+      "durationMs": null
+    }
+  },
+  "item/completed": {
+    "item": {
+      "type": "agentMessage",
+      "id": "synthetic-item-001",
+      "text": "{\"answer\":\"42\"}",
+      "phase": "final_answer",
+      "memoryCitation": null,
+      "delivery": null,
+      "questions": null
+    },
+    "threadId": "00000000-0000-4000-8000-000000000001",
+    "turnId": "00000000-0000-4000-8000-000000000002",
+    "completedAtMs": 1704067200000
+  },
+  "thread/tokenUsage/updated": {
+    "threadId": "00000000-0000-4000-8000-000000000001",
+    "turnId": "00000000-0000-4000-8000-000000000002",
+    "tokenUsage": {
+      "total": {
+        "totalTokens": 20,
+        "inputTokens": 10,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 10,
+        "reasoningOutputTokens": 5
+      },
+      "last": {
+        "totalTokens": 20,
+        "inputTokens": 10,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 10,
+        "reasoningOutputTokens": 5
+      },
+      "modelContextWindow": 128000
+    }
+  },
+  "turn/completed": {
+    "threadId": "00000000-0000-4000-8000-000000000001",
+    "turn": {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "items": [
+        {
+          "type": "agentMessage",
+          "id": "synthetic-item-001",
+          "text": "{\"answer\":\"42\"}",
+          "phase": "final_answer",
+          "memoryCitation": null,
+          "delivery": null,
+          "questions": null
+        }
+      ],
+      "itemsView": "summary",
+      "status": "completed",
+      "error": null,
+      "startedAt": 1704067200,
+      "completedAt": 1704067201,
+      "durationMs": 1000
+    }
+  },
+  "turn/interrupt": {}
+}

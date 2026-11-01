@@ -1,0 +1,897 @@
+{
+  "workspaces": {
+    "fields": {
+      "title": "s",
+      "timezone": "s",
+      "paths": "j",
+      "mode": "s",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "accounts": {
+    "fields": {
+      "platform": "s",
+      "platform_account_id": "s?",
+      "role": "s",
+      "name": "s",
+      "canonical_url": "s",
+      "identity_status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "connectors": {
+    "fields": {
+      "kind": "s",
+      "capability_status": "s",
+      "config_ref": "s?",
+      "last_success_at": "s?",
+      "last_error": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "sources": {
+    "fields": {
+      "kind": "s",
+      "connector_id": "s?",
+      "external_id": "s?",
+      "url": "s",
+      "schema_version": "s",
+      "last_sync_at": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "source_records": {
+    "fields": {
+      "source_id": "s",
+      "external_id": "s?",
+      "canonical_url": "s?",
+      "record_kind": "s",
+      "work_id": "s?",
+      "author_account_id": "s?",
+      "published_at": "s?",
+      "content_document_id": "s?",
+      "content_status": "s",
+      "payload": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "source_locations": {
+    "fields": {
+      "record_id": "s",
+      "kind": "s",
+      "relative_path": "s?",
+      "source_url": "s?",
+      "capture_time": "s?",
+      "sha256": "s",
+      "parser_version": "s",
+      "raw_response_ref": "j?",
+      "availability": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "source_events": {
+    "fields": {
+      "source_id": "s",
+      "external_event_id": "s",
+      "title": "s",
+      "occurred_at": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "user_source_marks": {
+    "fields": {
+      "record_id": "s",
+      "read_at": "s?",
+      "favorite": "b",
+      "used_at": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "topics": {
+    "fields": {
+      "title": "s",
+      "category": "s",
+      "audience": "s",
+      "angle": "s",
+      "expected_effort_min": "n",
+      "core_document_id": "s",
+      "status": "s",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "topic_sources": {
+    "fields": {
+      "topic_id": "s",
+      "source_record_id": "s",
+      "usage": "s",
+      "locator": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "documents": {
+    "fields": {
+      "kind": "s",
+      "owner_entity_id": "s?",
+      "head_revision_id": "s?",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "document_revisions": {
+    "fields": {
+      "document_id": "s",
+      "parent_revision_id": "s?",
+      "file_path": "s",
+      "sha256": "s",
+      "origin": "s",
+      "change_kind": "s",
+      "job_id": "s?",
+      "attempt_id": "s?",
+      "attempt_generation": "n?",
+      "result_receipt_id": "s?",
+      "based_on_core_revision_id": "s?",
+      "created_by": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "core_approvals": {
+    "fields": {
+      "topic_id": "s",
+      "revision_id": "s",
+      "approved_at": "s",
+      "actor": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "variants": {
+    "fields": {
+      "topic_id": "s",
+      "platform": "s",
+      "format": "s",
+      "variant_key": "s",
+      "document_id": "s",
+      "based_on_core_revision_id": "s",
+      "status": "s",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "candidates": {
+    "fields": {
+      "target_document_id": "s",
+      "base_revision_id": "s?",
+      "revision_id": "s",
+      "job_id": "s",
+      "attempt_id": "s",
+      "attempt_generation": "n",
+      "result_receipt_id": "s",
+      "status": "s",
+      "adopted_revision_id": "s?",
+      "adoption_mode": "s?",
+      "adopted_at": "s?",
+      "adopted_by": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "recommendation_runs": {
+    "fields": {
+      "kind": "s",
+      "input_manifest": "j",
+      "job_id": "s",
+      "status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "recommendation_candidates": {
+    "fields": {
+      "run_id": "s",
+      "kind": "s",
+      "payload": "j",
+      "source_ids": "j",
+      "rationale": "s",
+      "attempt_id": "s",
+      "attempt_generation": "n",
+      "result_receipt_id": "s",
+      "status": "s",
+      "adopted_target_id": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "topic_asset_links": {
+    "fields": {
+      "topic_id": "s",
+      "asset_id": "s",
+      "purpose": "s",
+      "evidence_kind": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "assets": {
+    "fields": {
+      "kind": "s",
+      "origin": "s",
+      "file_path": "s",
+      "sha256": "s",
+      "size_bytes": "n",
+      "mime": "s",
+      "duration_ms": "n?",
+      "dimensions": "j?",
+      "status": "s",
+      "job_id": "s?",
+      "generation_metadata": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "content_plans": {
+    "fields": {
+      "variant_id": "s",
+      "head_content_revision_id": "s?",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "content_plan_revisions": {
+    "fields": {
+      "plan_id": "s",
+      "revision_no": "n",
+      "parent_revision_id": "s?",
+      "variant_revision_id": "s",
+      "format": "s",
+      "schema_version": "s",
+      "units": "j",
+      "title_revision_id": "s?",
+      "caption_revision_id": "s?",
+      "cover_asset_id": "s?",
+      "input_hash": "s",
+      "input_manifest": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "production_plans": {
+    "fields": {
+      "topic_id": "s",
+      "scope": "s",
+      "variant_id": "s?",
+      "head_plan_revision_id": "s?",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "production_plan_revisions": {
+    "fields": {
+      "plan_id": "s",
+      "revision_no": "n",
+      "parent_revision_id": "s?",
+      "variant_revision_id": "s?",
+      "script_revision_id": "s?",
+      "source_preparation_revision_id": "s?",
+      "input_hash": "s",
+      "input_manifest": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "shots": {
+    "fields": {
+      "plan_revision_id": "s",
+      "shot_key": "s",
+      "position": "n",
+      "title": "s",
+      "kind": "s",
+      "duration_ms": "n",
+      "narration_revision_id": "s?",
+      "subtitle_revision_id": "s?",
+      "source_requirement": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "shot_assets": {
+    "fields": {
+      "shot_id": "s",
+      "asset_id": "s",
+      "role": "s",
+      "in_ms": "n?",
+      "out_ms": "n?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "asset_candidates": {
+    "fields": {
+      "job_id": "s",
+      "asset_id": "s",
+      "target_plan_revision_id": "s?",
+      "target_shot_key": "s?",
+      "base_asset_id": "s?",
+      "status": "s",
+      "adopted_plan_revision_id": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "artifacts": {
+    "fields": {
+      "variant_id": "s",
+      "variant_revision_id": "s",
+      "content_plan_revision_id": "s?",
+      "production_plan_revision_id": "s?",
+      "manifest_path": "s",
+      "sha256": "s",
+      "kind": "s",
+      "status": "s",
+      "producer_version": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "daily_plans": {
+    "fields": {
+      "local_date": "s",
+      "timezone": "s",
+      "budget_min": "n",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "daily_plan_items": {
+    "fields": {
+      "plan_id": "s",
+      "topic_id": "s?",
+      "job_id": "s?",
+      "action_id": "s?",
+      "position": "n",
+      "effort_min": "n",
+      "status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "schedules": {
+    "fields": {
+      "variant_id": "s",
+      "account_id": "s",
+      "variant_revision_id": "s",
+      "artifact_id": "s?",
+      "due_at": "s",
+      "timezone": "s",
+      "local_time": "s",
+      "version": "n",
+      "state": "s",
+      "publication_intent_id": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publication_batches": {
+    "fields": {
+      "triggered_by": "s",
+      "requested_at": "s",
+      "status": "s",
+      "orchestrator_job_id": "s",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publication_intents": {
+    "fields": {
+      "batch_id": "s?",
+      "variant_id": "s",
+      "account_id": "s",
+      "revision_id": "s",
+      "content_plan_revision_id": "s?",
+      "artifact_id": "s?",
+      "core_approval_id": "s",
+      "input_hash": "s",
+      "idempotency_key": "s",
+      "state": "s",
+      "progress": "j",
+      "version": "n",
+      "draft_id": "s?",
+      "work_id": "s?",
+      "replaces_intent_id": "s?",
+      "superseded_by_intent_id": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publication_members": {
+    "fields": {
+      "intent_id": "s",
+      "member_key": "s",
+      "position": "n",
+      "text_revision_id": "s",
+      "payload_hash": "s",
+      "reply_to_member_key": "s?",
+      "state": "s",
+      "platform_work_id": "s?",
+      "work_id": "s?",
+      "remote_request_id": "s?",
+      "error": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publication_attempts": {
+    "fields": {
+      "intent_id": "s",
+      "member_id": "s?",
+      "attempt_no": "n",
+      "phase": "s",
+      "request_fingerprint": "s",
+      "remote_request_id": "s?",
+      "result_status": "s",
+      "error": "j?",
+      "started_at": "s",
+      "finished_at": "s?",
+      "publishing_connection_id": "s?",
+      "publishing_config_revision": "n?",
+      "publishing_adapter_version": "s?",
+      "publishing_host_id": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "works": {
+    "fields": {
+      "platform": "s",
+      "platform_work_id": "s?",
+      "account_id": "s?",
+      "format": "s?",
+      "format_source": "s?",
+      "topic_id": "s?",
+      "variant_id": "s?",
+      "revision_id": "s?",
+      "url": "s",
+      "published_at": "s?",
+      "origin": "s",
+      "identity_status": "s",
+      "canonical_work_id": "s?",
+      "parent_work_id": "s?",
+      "position": "n?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "work_aliases": {
+    "fields": {
+      "alias_work_id": "s",
+      "canonical_work_id": "s",
+      "source_url": "s",
+      "resolution_evidence": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "metric_definitions": {
+    "fields": {
+      "platform": "s",
+      "key": "s",
+      "raw_field": "s",
+      "unit": "s",
+      "kind": "s",
+      "denominator_key": "s?",
+      "visibility": "s",
+      "definition_version": "s",
+      "scope": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "snapshots": {
+    "fields": {
+      "work_id": "s",
+      "source_id": "s",
+      "collection_request_id": "s",
+      "request_fingerprint": "s",
+      "observed_at": "s?",
+      "observed_time_basis": "s",
+      "observed_time_reason": "s?",
+      "collected_at": "s",
+      "target_window": "n?",
+      "observed_age_s": "n?",
+      "raw_path": "s",
+      "raw_sha256": "s",
+      "adapter_version": "s",
+      "supersedes_snapshot_id": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "metric_values": {
+    "fields": {
+      "snapshot_id": "s",
+      "definition_id": "s",
+      "value": "s?",
+      "availability": "s",
+      "reason": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "account_snapshots": {
+    "fields": {
+      "account_id": "s",
+      "observed_at": "s?",
+      "observed_time_basis": "s",
+      "observed_time_reason": "s?",
+      "collected_at": "s",
+      "raw_path": "s",
+      "adapter_version": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "account_metric_values": {
+    "fields": {
+      "account_snapshot_id": "s",
+      "definition_id": "s",
+      "value": "s?",
+      "availability": "s",
+      "reason": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "comparison_runs": {
+    "fields": {
+      "query_spec": "j",
+      "selected_snapshot_ids": "j",
+      "selected_inputs_by_cohort": "j",
+      "excluded_work_ids": "j",
+      "excluded_reasons": "j",
+      "definition_versions": "j",
+      "result": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "retro_reports": {
+    "fields": {
+      "document_id": "s",
+      "comparison_run_id": "s",
+      "source_record_ids": "j",
+      "status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "retro_actions": {
+    "fields": {
+      "report_id": "s",
+      "report_revision_id": "s",
+      "description": "s",
+      "hypothesis": "s",
+      "target_metric": "s",
+      "observation_plan": "j",
+      "status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "action_adoptions": {
+    "fields": {
+      "action_id": "s",
+      "adoption_key": "s",
+      "topic_id": "s",
+      "variant_id": "s?",
+      "adopted_at": "s",
+      "baseline_run_id": "s?",
+      "baseline_cohort_key": "s?",
+      "baseline_input_hash": "s?",
+      "observation_plan": "j",
+      "plan_hash": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "adoption_works": {
+    "fields": {
+      "adoption_id": "s",
+      "work_id": "s",
+      "link_evidence": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "action_evaluations": {
+    "fields": {
+      "adoption_id": "s",
+      "comparison_run_id": "s",
+      "result": "s",
+      "limitations": "j",
+      "evaluated_at": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "business_events": {
+    "fields": {
+      "kind": "s",
+      "occurred_at": "s",
+      "work_id": "s?",
+      "topic_id": "s?",
+      "count": "s?",
+      "amount": "s?",
+      "note": "s",
+      "attribution_status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "jobs": {
+    "fields": {
+      "kind": "s",
+      "target_id": "s?",
+      "executor_id": "s?",
+      "entrypoint": "s",
+      "execution_mode": "s",
+      "current_attempt_id": "s?",
+      "attempt_generation": "n",
+      "input_manifest": "j",
+      "input_hash": "s",
+      "state": "s",
+      "due_at": "s?",
+      "retry_policy": "j",
+      "presentation": "s",
+      "cancel_requested_at": "s?",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "job_attempts": {
+    "fields": {
+      "job_id": "s",
+      "attempt_no": "n",
+      "attempt_generation": "n",
+      "state": "s",
+      "lease_owner": "s",
+      "lease_until": "s",
+      "host_connection_id": "s?",
+      "native_task_binding_id": "s?",
+      "output_deadline": "s?",
+      "output_hash": "s?",
+      "checkpoint": "j",
+      "runtime_session_id": "s?",
+      "runtime_turn_id": "s?",
+      "error": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "host_connections": {
+    "fields": {
+      "service_instance_id": "s",
+      "host_surface": "s",
+      "plugin_id": "s",
+      "plugin_version": "s",
+      "runtime_version": "s",
+      "connection_mode": "s",
+      "request_identity_ref": "s",
+      "status": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "host_capability_records": {
+    "fields": {
+      "host_surface": "s",
+      "runtime_version": "s",
+      "connection_mode": "s",
+      "operation": "s",
+      "plugin_version": "s",
+      "status": "s",
+      "limitations": "j",
+      "verified_at": "s?",
+      "evidence_ref": "s?",
+      "version": "n"
+    },
+    "source": "docs/architecture.md"
+  },
+  "host_task_observers": {
+    "fields": {
+      "observer_epoch": "s",
+      "host_connection_id": "s",
+      "capability_record_id": "s",
+      "capability_version": "n",
+      "request_identity_ref": "s",
+      "state": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "native_task_bindings": {
+    "fields": {
+      "observer_id": "s",
+      "observer_epoch": "s",
+      "host_connection_id": "s",
+      "scope": "s",
+      "native_namespace": "s",
+      "native_session_id": "s?",
+      "native_turn_id": "s?",
+      "native_task_id": "s?",
+      "current_attempt_id": "s?",
+      "latest_observation_id": "s?",
+      "last_renewed_observation_id": "s?",
+      "state": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "native_task_observations": {
+    "fields": {
+      "binding_id": "s",
+      "observer_id": "s",
+      "observer_epoch": "s",
+      "sequence": "n",
+      "native_state": "s",
+      "observed_at": "s",
+      "received_at": "s",
+      "native_evidence_ref": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "result_receipts": {
+    "fields": {
+      "job_id": "s",
+      "attempt_id": "s",
+      "attempt_generation": "n",
+      "input_hash": "s",
+      "output_hash": "s",
+      "commit_purpose": "s",
+      "state": "s",
+      "result_ids": "j",
+      "quarantine_reason": "s?",
+      "idempotency_requests": "j",
+      "output_payload": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "job_events": {
+    "fields": {
+      "job_id": "s",
+      "seq": "n",
+      "attempt_no": "n",
+      "type": "s",
+      "payload": "j",
+      "occurred_at": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "write_intents": {
+    "fields": {
+      "document_id": "s",
+      "expected_revision_id": "s?",
+      "planned_revision_id": "s",
+      "path": "s",
+      "sha256": "s",
+      "pending_content": "s?",
+      "commit_purpose": "s",
+      "result_receipt_id": "s?",
+      "job_id": "s?",
+      "attempt_id": "s?",
+      "attempt_generation": "n?",
+      "input_hash": "s?",
+      "output_hash": "s?",
+      "state": "s",
+      "error": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "index_entries": {
+    "fields": {
+      "source_location_id": "s",
+      "path": "s",
+      "mtime": "n",
+      "size": "n",
+      "sha256": "s",
+      "parser_version": "s",
+      "status": "s",
+      "search_text": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "sync_checkpoints": {
+    "fields": {
+      "connector_id": "s",
+      "stream_key": "s",
+      "cursor": "s?",
+      "etag": "s?",
+      "watermark": "s?",
+      "last_complete_at": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "evidence_links": {
+    "fields": {
+      "owner_type": "s",
+      "owner_id": "s",
+      "source_type": "s",
+      "source_id": "s",
+      "locator": "s?",
+      "quote_hash": "s?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "source_event_records": {
+    "fields": {
+      "event_id": "s",
+      "record_id": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "idempotency_requests": {
+    "fields": {
+      "operation": "s",
+      "key": "s",
+      "request_hash": "s",
+      "response": "j?",
+      "state": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_settings": {
+    "fields": {
+      "version": "n",
+      "legacy_import_sha256": "s?",
+      "imported_at": "s?",
+      "diagnostic_claims": "j?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_connections": {
+    "fields": {
+      "account_id": "s",
+      "platform": "s",
+      "route": "s",
+      "version": "n",
+      "config_revision": "n",
+      "enabled": "b",
+      "active_config_revision": "n?",
+      "runtime_state": "s",
+      "adapter_version": "s?",
+      "host_id": "s?",
+      "applied_at": "s?",
+      "error_code": "s?",
+      "apply_generation": "n",
+      "next_check_sequence": "n",
+      "current_check_sequence": "n?"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_connection_revisions": {
+    "fields": {
+      "connection_id": "s",
+      "revision": "n",
+      "credential_name": "s?",
+      "route": "s",
+      "platform_account_id": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_defaults": {
+    "fields": {
+      "platform": "s",
+      "format": "s",
+      "account_id": "s",
+      "connection_id": "s"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_connection_checks": {
+    "fields": {
+      "connection_id": "s",
+      "sequence": "n",
+      "config_revision": "n",
+      "connection_version": "n",
+      "checked_at": "s",
+      "result": "j",
+      "applied_to_current": "b"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publishing_capability_evidence": {
+    "fields": {
+      "account_id": "s",
+      "platform": "s",
+      "format": "s",
+      "operation": "s",
+      "host_id": "s",
+      "adapter_version": "s",
+      "evidence_kind": "s",
+      "evidence_ref": "s",
+      "evidence_sha256": "s",
+      "verified_at": "s",
+      "limitations": "j"
+    },
+    "source": "docs/architecture.md"
+  },
+  "publication_binding_scopes": {
+    "fields": {
+      "intent_id": "s",
+      "connection_id": "s",
+      "config_revision": "n",
+      "account_id": "s",
+      "platform": "s",
+      "format": "s",
+      "platform_account_id": "s",
+      "adapter_version": "s",
+      "host_id": "s"
+    },
+    "source": "docs/architecture.md"
+  }
+}

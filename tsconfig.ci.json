@@ -1,0 +1,41 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2024",
+      "DOM",
+      "DOM.Iterable"
+    ]
+  },
+  "include": [
+    "scripts/ci/**/*.ts",
+    "scripts/runtime/**/*.ts",
+    "tests/ci/**/*.ts",
+    "tests/e2e/**/*.ts",
+    "tests/bootstrap/*.ts",
+    "tests/ui-fidelity/transport.test.ts",
+    "tests/documents/*.ts",
+    "tests/settings/*.ts",
+    "tests/job-recovery/**/*.ts",
+    "tests/foundation/wp-07/*.test.ts",
+    "tests/foundation/wp-07/D07-006/*.test.ts",
+    "playwright.config.ts",
+    "tests/foundation/wp-07/D07-007/*.test.ts",
+    "tests/ingest-index/**/*.ts",
+    "tests/metrics/**/*.ts",
+    "tests/comparisons/**/*.ts",
+    "tests/service-agent/**/*.ts",
+    "tests/retro-adoption/**/*.ts",
+    "tests/daily-plans/**/*.ts",
+    "tests/foundation/wp-07/D07-008/*.test.ts",
+    "tests/content-workflows/**/*.ts",
+    "tests/host-runs/**/*.ts",
+    "tests/plans/**/*.ts",
+    "tests/media-artifacts/**/*.ts",
+    "tests/publication-domain/**/*.ts",
+    "tests/foundation/wp-07/D07-009/*.test.ts",
+    "tests/mcp-bridge/**/*.ts",
+    "tests/publishers/**/*.ts",
+    "tests/hosts/**/*.ts"
+  ]
+}

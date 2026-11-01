@@ -1,0 +1,1 @@
+{ "extends": "../../tsconfig.base.json", "include": ["./**/*.ts", "../../packages/adapters/src/agent/**/*.ts", "../../packages/domain/src/service-agent/**/*.ts", "../../apps/service/src/worker/handlers/agent/**/*.ts"] }

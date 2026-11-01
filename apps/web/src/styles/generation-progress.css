@@ -1,0 +1,49 @@
+.generation-progress{display:grid;justify-items:center;gap:16px;padding:8px 0 12px;text-align:center;color:var(--navy);overflow-wrap:anywhere}
+.generation-progress-visual{width:176px;height:176px;position:relative}
+.generation-orb{width:100%;height:100%;position:relative;isolation:isolate}
+.generation-orb:after{content:"";position:absolute;left:25%;right:25%;bottom:0;height:8px;border-radius:50%;background:#0b1f521a;filter:blur(5px);z-index:-1}
+.generation-orb-canvas{display:block;width:100%;height:100%}
+.generation-orb-static{position:absolute;inset:8%;border-radius:50%;background:radial-gradient(ellipse at 34% 23%,#ffffffd9 0,transparent 26%),radial-gradient(ellipse at 28% 84%,#0b1f527d 0,transparent 42%),radial-gradient(circle at 62% 37%,#b1b4f0 0,#5b5fd6 65%,#0b1f52 100%);box-shadow:inset 0 0 8px 2px #eef0fa99,inset -4px -7px 13px #0b1f5240;overflow:hidden}
+.generation-orb-static:before{content:"";position:absolute;inset:15% 18%;border-radius:48% 52% 68% 32%;border-left:9px solid #0b1f5238;transform:rotate(32deg);filter:blur(2px)}
+.generation-orb-static:after{content:"";position:absolute;left:48%;top:18%;width:16%;height:22%;border-radius:50%;background:#ccf86644;filter:blur(10px)}
+.generation-progress-state{display:inline-block;font:600 11px/1.6 var(--sans);padding:3px 10px;border-radius:var(--radius-full,9999px);background:var(--violet-soft,#e2e3fb);color:var(--violet,#5b5fd6)}
+.generation-progress-message{margin:8px 0 0;font:500 14px/1.8 var(--sans);color:var(--navy)}
+.generation-progress-note{margin:0;max-width:100%;font:400 12px/1.8 var(--sans);color:var(--ink-muted,#4a5580);white-space:pre-wrap}
+.generation-progress-timing{margin:0;display:flex;flex-direction:column;align-items:center;gap:2px;font:400 12px/1.8 var(--sans);color:var(--ink-muted);font-variant-numeric:tabular-nums}
+.generation-progress-timing[data-stale="true"] span:last-child{color:var(--navy);font-weight:600}
+.generation-progress[data-state="waiting"] .generation-progress-state,.generation-progress[data-state="failed"] .generation-progress-state{background:var(--mist);color:var(--navy);box-shadow:inset 0 0 0 1px var(--line)}
+.generation-progress[data-state="waiting"] .generation-orb-static,.generation-progress[data-state="failed"] .generation-orb-static{filter:saturate(.35)}
+.generation-progress-details{width:100%;max-width:520px;text-align:left;font:400 12px/1.8 var(--sans);color:var(--ink-muted)}
+.generation-progress-details summary{cursor:pointer;width:max-content;margin:0 auto;color:var(--navy)}
+.generation-progress-details dl{margin:8px 0 0;display:grid;gap:4px}.generation-progress-details dl div{display:grid;grid-template-columns:minmax(72px,auto) minmax(0,1fr);gap:8px}
+.generation-progress-details dt{color:var(--navy)}.generation-progress-details dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:480px){.generation-progress-visual{width:144px;height:144px}.generation-progress{gap:12px;padding-top:0}}
+@media(prefers-reduced-motion:reduce){.generation-progress *{animation:none!important;transition:none!important}}
+/* 生图加载态（img-fx 像素马赛克）：宽度跟随容器、按画幅比例定高；竖图最高 420px。静态占位不做动画。 */
+.img-gen-loader{position:relative;display:block;width:100%;max-width:calc(420px * var(--img-gen-ratio,1));margin:0 auto;border-radius:8px;overflow:hidden;background:var(--mist);box-sizing:border-box}
+.img-gen-loader-fx.image-gen-root{position:absolute;inset:0;display:block;width:100%;height:100%}
+.img-gen-loader-fx .image-gen-child,.img-gen-loader-card{width:100%;height:100%}
+.img-gen-loader-card{border-radius:8px}
+.img-gen-loader-final{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.img-gen-loader-static{position:absolute;inset:0;display:grid;place-content:center;grid-auto-flow:column;gap:6px;background:linear-gradient(135deg,#e2e3fb 0,#eef0fa 52%,#eefcc8 100%);background-size:100% 100%}
+.img-gen-loader-static:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff80 1px,transparent 1px),linear-gradient(90deg,#ffffff80 1px,transparent 1px);background-size:18px 18px}
+.img-gen-loader-static span{position:relative;width:10px;height:10px;border-radius:2px;background:#5b5fd6;opacity:.55}
+.img-gen-loader-static span:nth-child(2){background:#0b1f52;opacity:.4}.img-gen-loader-static span:nth-child(3){background:#ccf866;opacity:.9}
+.img-gen-loader[data-mode="failed"] .img-gen-loader-static{filter:saturate(.2)}
+/* 底图按真实进度像素化（Canvas 2D）；着色器只是上方的半透明动效层，揭示时淡出。 */
+.img-gen-loader-base{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%}
+.img-gen-loader-fx.image-gen-root{z-index:1}
+.img-gen-loader-fx .image-gen-shader{transition:opacity .6s ease}
+.img-gen-loader[data-mode="failed"] .img-gen-loader-base{filter:grayscale(.85) brightness(1.04)}
+.img-gen-loader-label{position:absolute;z-index:3;left:8px;bottom:8px;max-width:calc(100% - 16px);box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 6px;padding:2px 8px;border-radius:12px;font:600 11px/1.6 var(--sans);background:#ffffffe0;color:var(--navy);pointer-events:none}
+.img-gen-loader-label b{font-weight:600}
+.img-gen-loader-detail{font-weight:400;color:var(--ink-muted,#4a5580);font-variant-numeric:tabular-nums}
+.img-gen-loader-slow{position:absolute;z-index:3;left:8px;top:8px;max-width:calc(100% - 16px);box-sizing:border-box;padding:2px 8px;border-radius:12px;font:600 11px/1.6 var(--sans);background:#fff6d6f0;color:#6b4e00;pointer-events:none}
+.img-gen-loader-slow[data-note="finishing"]{background:#eef0fae8;color:var(--navy)}
+.img-gen-loader[data-mode="failed"] .img-gen-loader-label{background:#fff1f0f0;color:#8a1f17}
+.img-gen-loader[data-mode="done"] .img-gen-loader-label,.img-gen-loader[data-mode="done"] .img-gen-loader-slow{display:none}
+.generation-progress-visual .img-gen-loader-slow{display:none}
+@media(prefers-reduced-motion:reduce){.img-gen-loader-fx .image-gen-shader{transition:none}}
+.generation-progress-visual.is-image{width:min(320px,100%);height:auto}
+.generation-progress-visual .img-gen-loader-label{display:none}
+.generation-progress-visual.is-image>.generation-orb{width:176px;height:176px;margin:0 auto}

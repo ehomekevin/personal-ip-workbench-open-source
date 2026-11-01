@@ -1,0 +1,35 @@
+{
+  "schema_version": "layout-native-capability-inspection.v1",
+  "observed_at": "2026-10-14T03:51:47.540385+00:00",
+  "task": "WECHAT-LAYOUT-STUDIO-01/r1",
+  "stage": "readonly_leaf_preparation",
+  "real_native_submissions": 0,
+  "real_native_processes_started": 0,
+  "image_generation_calls": 0,
+  "fixture_tests": 16,
+  "codex_version": "codex-cli 0.161.0",
+  "claude_version": "2.1.283 (Claude Code)",
+  "codex_turn_start_schema_sha256": "f938082a79859cb113b695a996b760f904b5caf55760b539a1d9b1865ab13fc6",
+  "localImage_schema_supported": true,
+  "ordinary_codex_route": "text+skill input; not image",
+  "ordinary_claude_route": "-p text only; tools empty; not image",
+  "leaf_visual_route": "CodexNative default restricted profile with turn/start localImage inputs; no new imageGeneration or view_image tool",
+  "model_live_image_readiness": "not_run",
+  "subscription_live_readiness": "not_run",
+  "safe_configuration_metadata": {
+    "builtin_openai_overridden": false,
+    "legacy_base_override": false,
+    "api_environment_override_presence": false
+  },
+  "source_standard_sha256": {
+    "png": "613da7c52607477d1949272a6b0a153b67b0d677ea37739a43359b73e391586e",
+    "html": "26dea64f8066382d130f2db6480f805085d02ce5c63a4972ba3a7d807eeb4b96"
+  },
+  "native_profile_shared_changes_required": [],
+  "integration_requirements": [
+    "durable LayoutCheckJournal reserve/load/save",
+    "root bounded candidate permit and durable reserve_submission callback",
+    "shared package export/bootstrap/job/routing wiring after image r2 handoff",
+    "formal capture consumer and domain current-binding fence"
+  ]
+}

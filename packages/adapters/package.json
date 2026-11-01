@@ -1,0 +1,29 @@
+{
+  "name": "@workbench/adapters",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@workbench/contracts": "workspace:*"
+  },
+  "exports": {
+    "./personal-site": "./src/personal-site/index.ts",
+    "./vault": "./src/vault/index.ts",
+    "./tikhub": "./src/tikhub/index.ts",
+    "./agent/codex": "./src/agent/codex/index.ts",
+    "./agent/claude": "./src/agent/claude/index.ts",
+    "./host-observer": "./src/host-observer/index.ts",
+    "./media/h3": "./src/media/h3/index.ts",
+    "./media/voice-subtitles": "./src/media/voice-subtitles/index.ts",
+    "./media/render": "./src/media/render/index.ts",
+    "./publishers/xiaohongshu": "./src/publishers/xiaohongshu/index.ts",
+    "./publishers/wechat": "./src/publishers/wechat/index.ts",
+    "./publishers/x": "./src/publishers/x/index.ts",
+    "./publishers/douyin": "./src/publishers/douyin/index.ts",
+    "./publishers/bilibili": "./src/publishers/bilibili/index.ts",
+    "./media/image": "./src/media/image/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

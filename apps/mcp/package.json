@@ -1,0 +1,17 @@
+{
+  "name": "@workbench/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@workbench/contracts": "workspace:*",
+    "@workbench/host-bridge": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "zod": "4.6.5"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "node src/main.ts"
+  }
+}

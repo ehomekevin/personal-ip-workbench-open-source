@@ -1,0 +1,52 @@
+@import "../features/sources/accounts-manual/research.css";
+.benchmark-intro{margin:18px 0 24px;line-height:1.8}.benchmark-list-heading{margin-bottom:20px}.benchmark-avatar{position:relative;display:grid;place-items:center;width:52px;height:52px;flex:0 0 52px;border-radius:50%;overflow:hidden;background:var(--mist);color:var(--navy);border:1px solid var(--line);font-size:20px}.benchmark-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.benchmark-account h3{margin:18px 0 5px}.benchmark-bio{font-size:12px;line-height:1.8;color:var(--ink-muted);white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:65px;margin:14px 0 18px;overflow-wrap:anywhere}.benchmark-card-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.benchmark-card-stats strong,.benchmark-profile-stats strong{display:block;color:var(--navy);font-size:22px;font-weight:500;line-height:1.4}.benchmark-card-stats strong{font-size:19px;white-space:nowrap;letter-spacing:-.04em}.benchmark-card-stats span,.benchmark-profile-stats span{display:block;font-size:10px;color:var(--ink-muted);margin-top:5px}.benchmark-collected{margin:20px 0 14px;font-size:10px}.benchmark-card-actions{border-top:1px solid var(--line);padding-top:18px}.benchmark-card-actions .button{padding:8px 16px;font-size:12px}.benchmark-profile-head{display:flex;align-items:center;gap:14px}.benchmark-profile-head h3{font-size:20px;margin-bottom:5px}.benchmark-profile-bio{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.9;margin:18px 0}.benchmark-profile-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:20px 0}.benchmark-study-actions{margin:22px 0 12px;flex-wrap:wrap}.benchmark-study-actions .button{font-size:12px;padding:8px 14px}.benchmark-works{display:grid;gap:12px;margin:18px 0}.benchmark-work{display:flex;align-items:flex-start;gap:14px;width:100%;border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--white,#fff);text-align:left;color:var(--navy);cursor:pointer}.benchmark-work:hover{background:var(--mist)}.benchmark-work>img{width:82px;height:92px;object-fit:cover;border-radius:8px;flex:none}.benchmark-work>div{min-width:0;flex:1}.benchmark-work strong{font-size:14px;line-height:1.6;display:block;overflow-wrap:anywhere}.benchmark-work p{font-size:12px;line-height:1.7;color:var(--ink-muted);margin:7px 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}.benchmark-work small{font-size:10px;color:var(--ink-muted)}.benchmark-work-metrics{display:flex;gap:9px 14px;flex-wrap:wrap;font-size:11px;color:var(--ink-muted);margin-top:12px}.benchmark-work-metrics b{color:var(--navy);font-weight:500}.benchmark-media{display:grid;gap:16px;margin:22px 0}.benchmark-media img,.benchmark-media video{display:block;width:100%;max-height:480px;object-fit:contain;border-radius:12px;background:var(--mist)}.benchmark-media figcaption{font-size:11px;color:var(--ink-muted);margin-top:8px;line-height:1.7}.benchmark-scope{line-height:1.8;margin-top:20px}.benchmark-quote{background:var(--mist);border-left:3px solid var(--lime);padding:16px;margin:20px 0;border-radius:0 12px 12px 0}.benchmark-quote p{white-space:pre-wrap;font-size:13px;line-height:1.8;margin-top:12px;overflow-wrap:anywhere}.benchmark-work:focus-visible{outline:2px solid var(--navy);outline-offset:3px}.benchmark-error{border-left:3px solid var(--navy);background:var(--mist);padding:12px 16px;font-size:12px;line-height:1.8;margin-bottom:16px}@media(max-width:700px){.benchmark-profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.benchmark-work{padding:12px;gap:10px}.benchmark-work>img{width:56px;height:70px}.benchmark-card-stats strong{font-size:20px}.benchmark-study-actions .button{flex-grow:1}}
+
+/* 设置素材弹窗与账号研究共用封面、元数据和指标，避免两处判断信息漂移。 */
+.benchmark-works{gap:14px;margin:16px 0 20px}
+.benchmark-work{gap:16px;padding:14px;border-radius:12px;min-width:0;transition:background-color .15s,border-color .15s}
+.benchmark-work:hover{background:var(--mist);border-color:var(--navy)}
+.benchmark-work:active{background:var(--line)}
+.benchmark-work-cover{position:relative;display:grid;place-items:center;flex:0 0 112px;width:112px;aspect-ratio:9/14;border-radius:8px;overflow:hidden;background:var(--mist);border:1px solid var(--line);color:var(--ink-muted)}
+.benchmark-work-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.benchmark-work-cover img[hidden]{display:none}
+.benchmark-cover-fallback{padding:12px;text-align:center;font-size:12px;line-height:1.7}
+.benchmark-cover-type{position:absolute;bottom:0;left:0;right:0;padding:7px 8px;background:var(--navy);color:var(--white);font-size:11px;line-height:1.4;text-align:center}
+.benchmark-work-content{display:flex;flex:1;flex-direction:column;min-width:0;gap:10px}
+.benchmark-work .benchmark-work-title{font-size:14px;line-height:1.6;font-weight:600;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.benchmark-work-summary{font-size:12px;line-height:1.7;color:var(--ink-muted);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.benchmark-work-meta{display:flex;flex-direction:column;gap:3px;font-size:11px;line-height:1.6;color:var(--ink-muted)}
+.benchmark-work .benchmark-work-metrics{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0;color:var(--ink-muted);font-size:11px;line-height:1.6}
+.benchmark-work-metrics b{font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums}
+.benchmark-work-open{font-size:11px;line-height:1.6;color:var(--navy);margin-top:auto}
+.benchmark-material-intro{line-height:1.7}
+.benchmark-scope{line-height:1.8;overflow-wrap:anywhere}
+.benchmark-record-detail .benchmark-work-metrics{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0;font-size:13px;color:var(--ink-muted)}
+.benchmark-original-link{margin:0 0 18px}
+.benchmark-media{display:grid;gap:18px;margin:0 0 20px}
+.benchmark-media figure{min-width:0;margin:0}
+.benchmark-media video,.benchmark-media img{display:block;max-width:100%;max-height:54vh;margin:auto;border-radius:10px;background:var(--mist)}
+.benchmark-media video{width:100%}
+.benchmark-media figcaption{font-size:12px;line-height:1.7;color:var(--ink-muted);margin-top:10px;overflow-wrap:anywhere}
+@media(max-width:700px){
+ .benchmark-work{padding:12px;gap:12px}
+ .benchmark-work-cover{flex-basis:92px;width:92px}
+ .benchmark-work-content{gap:8px}
+ .benchmark-work .benchmark-work-title{font-size:14px;line-height:1.6}
+ .benchmark-work-meta,.benchmark-work .benchmark-work-metrics,.benchmark-work-open{font-size:12px}
+ .benchmark-cover-type{font-size:12px}
+ .benchmark-record-detail .benchmark-work-metrics{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){.benchmark-work{transition:none}}
+.benchmark-detail-image{display:grid;place-items:center;min-height:150px;border-radius:10px;background:var(--mist);overflow:hidden}
+.benchmark-detail-image>span,.benchmark-detail-image>img{grid-area:1/1}
+.benchmark-detail-image img{z-index:1}
+.benchmark-media img[hidden]{display:none}
+.benchmark-video-unavailable{padding:16px;background:var(--mist);border:1px solid var(--line);border-radius:12px}
+.benchmark-video-unavailable p{margin:12px 0;line-height:1.8}
+.benchmark-video-unavailable img{display:block;width:100%;max-height:54vh;object-fit:contain;border-radius:10px}
+.benchmark-video-original{display:inline-flex;align-items:center;min-height:44px;overflow-wrap:anywhere}
+.benchmark-video-original:focus-visible{outline:2px solid var(--navy);outline-offset:3px;border-radius:4px}
+#dialog[open]:not(.drawer):has(.benchmark-works),#dialog[open]:not(.drawer):has(.benchmark-record-detail){display:flex;flex-direction:column;max-height:calc(100dvh - 24px)}
+#dialog:not(.drawer):has(.benchmark-works) .dialog-body,#dialog:not(.drawer):has(.benchmark-record-detail) .dialog-body{min-height:0;flex:1 1 auto}
+#dialog:not(.drawer):has(.benchmark-works) .dialog-head,#dialog:not(.drawer):has(.benchmark-works) .dialog-foot,#dialog:not(.drawer):has(.benchmark-record-detail) .dialog-head,#dialog:not(.drawer):has(.benchmark-record-detail) .dialog-foot{flex-shrink:0}
+#dialog:not(.drawer):has(.benchmark-works) .dialog-head h2,#dialog:not(.drawer):has(.benchmark-record-detail) .dialog-head h2{min-width:0;overflow-wrap:anywhere}

@@ -1,0 +1,14 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { CONTRACT_VERSION, type ServiceConfiguration } from '../../packages/contracts/src/index.ts';
+import { openWorkspaceStorage } from '../../packages/storage/src/connection/index.ts';
+import type { ApplicationContext } from '../../packages/domain/src/ports/index.ts';
+import { Publications, type PublicationTarget } from '../../packages/domain/src/publications/index.ts';
+import { Schedules } from '../../packages/domain/src/schedules/index.ts';
+import { PublicationWorker } from '../../apps/service/src/worker/handlers/publication/index.ts';
+import { ControlledPublisher, binding } from './harness.ts';
+const input=JSON.parse(readFileSync(process.argv[2]!,'utf8')) as {config:ServiceConfiguration;target:PublicationTarget;now:number;mode:'claim'|'replace'|'send-crash'|'result-crash';schedule_id?:string;schedule_version?:number;intent_version?:number},config=input.config,storage=openWorkspaceStorage(join(config.paths.state_root,'workbench.sqlite')),identity={workspace_id:config.workspace_id,service_instance_id:config.service_instance_id,contract_version:CONTRACT_VERSION},context:ApplicationContext={db:storage.db,identity,config,paths:config.paths,getExecutorHealth:async()=>[]},adapter=new ControlledPublisher(context,(_input,op)=>{if(input.mode==='send-crash'&&op==='submit')process.kill(process.pid,'SIGKILL');return {};}),pub=new Publications(context,{clock:()=>input.now,bindings:[binding(input.target,adapter)]}),schedules=new Schedules(context,pub);
+process.send?.({ready:true});
+async function run(){try{if(input.mode==='send-crash'){await new PublicationWorker(pub).runOnce();return;}if(input.mode==='result-crash'){const claim=pub.claim('crash-after-result');if(!claim)throw new Error('missing crash claim');await pub.execute({claim,signal:new AbortController().signal,checkpoint:v=>{pub.jobs.checkpoint(claim.fence,v);if(v.phase==='public_confirmed')process.kill(process.pid,'SIGKILL');}});throw new Error('result crash breakpoint not reached');}if(input.mode==='claim'){const claim=pub.claim('child-claim');process.send?.({mode:input.mode,claimed:claim?.job.id??null,intent_id:claim?.job.target_id??null});}else{const result=await schedules.patch({...identity,request_id:randomUUID(),idempotency_key:randomUUID(),request_identity_ref:'race-child'},input.schedule_id!,{operation:'replace_content',expected_version:input.schedule_version!,expected_intent_version:input.intent_version!,target:input.target});process.send?.({mode:input.mode,replaced:true,intent_id:result.publication_intent_id});}}catch(error){process.send?.({mode:input.mode,error:error instanceof Error?error.message:'failed'});}finally{storage.close();process.disconnect?.();}}
+process.once('message',()=>{void run();});

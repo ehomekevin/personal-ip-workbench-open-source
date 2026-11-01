@@ -1,0 +1,319 @@
+{
+  "provenance": [
+    {
+      "kind": "synthetic",
+      "path": "synthetic/x-post-source-1.json",
+      "sha256": "342b7616c2a435b1f1cf6e48239b5f205fcbf50c329a193366d7b7931859160f"
+    },
+    {
+      "kind": "synthetic",
+      "path": "synthetic/x-post-source-2.json",
+      "sha256": "18df5bedda2816e5dd88a696389286f4a04dfbe786a2baac3df3d930520e7d73"
+    }
+  ],
+  "repost": {
+    "data": {
+      "user": {
+        "rest_id": "9000000000000000009",
+        "profile": "fixture_author2",
+        "name": "合成作者2",
+        "avatar": "https://example.invalid/avatar-2.png"
+      },
+      "timeline": [
+        {
+          "tweet_id": "9000000000000000010",
+          "bookmarks": 0,
+          "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+          "favorites": 0,
+          "text": "合成测试正文 6：用于验证回复、引用及转发结构。",
+          "lang": "zh",
+          "sensitive": null,
+          "source": "<a href=\"https://example.invalid/client\">Synthetic client</a>",
+          "views": "106",
+          "quotes": 0,
+          "entities": {
+            "user_mentions": [
+              {
+                "id_str": "9000000000000000011",
+                "name": "合成作者3",
+                "screen_name": "fixture_author1"
+              }
+            ]
+          },
+          "replies": 0,
+          "retweets": 32,
+          "conversation_id": "9000000000000000010",
+          "media": [],
+          "author": {
+            "rest_id": "9000000000000000009",
+            "name": null,
+            "screen_name": null,
+            "avatar": null,
+            "followers_count": null,
+            "blue_verified": true
+          },
+          "retweeted": {
+            "id": "9000000000000000012"
+          },
+          "retweeted_tweet": {
+            "tweet_id": "9000000000000000012",
+            "bookmarks": 49,
+            "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+            "favorites": 49,
+            "text": "合成测试正文 7：用于验证回复、引用及转发结构。",
+            "lang": "zh",
+            "sensitive": null,
+            "views": "107",
+            "quotes": 46,
+            "entities": [],
+            "replies": 47,
+            "retweets": 48,
+            "conversation_id": "9000000000000000012",
+            "quoted": {
+              "tweet_id": "9000000000000000013",
+              "bookmarks": 56,
+              "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+              "favorites": 56,
+              "text": "合成测试正文 8：用于验证回复、引用及转发结构。",
+              "lang": "en",
+              "views": "108",
+              "sensitive": null,
+              "quotes": 53,
+              "replies": 54,
+              "retweets": 55,
+              "conversation_id": "9000000000000000013",
+              "author": {
+                "rest_id": "9000000000000000014",
+                "name": null,
+                "screen_name": null,
+                "avatar": null,
+                "followers_count": null,
+                "blue_verified": true
+              },
+              "media": []
+            },
+            "author": {
+              "rest_id": "9000000000000000011",
+              "name": null,
+              "screen_name": null,
+              "avatar": null,
+              "blue_verified": true
+            },
+            "media": []
+          }
+        }
+      ]
+    }
+  },
+  "sampleAuthor": {
+    "data": {
+      "user": {
+        "rest_id": "9000000000000000001",
+        "profile": "fixture_author1",
+        "name": "合成作者1",
+        "avatar": "https://example.invalid/avatar-1.jpg"
+      },
+      "timeline": [
+        {
+          "tweet_id": "9000000000000000002",
+          "bookmarks": 0,
+          "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+          "favorites": 0,
+          "text": "合成测试正文 1：用于验证回复、引用及转发结构。",
+          "lang": "zh",
+          "views": "101",
+          "sensitive": false,
+          "quotes": 0,
+          "replies": 0,
+          "retweets": 0,
+          "conversation_id": "9000000000000000003",
+          "media": [],
+          "reply_to": "9000000000000000003",
+          "entities": {
+            "urls": [
+              {
+                "display_url": "example.invalid/source-1",
+                "expanded_url": "https://example.invalid/expanded_url-1",
+                "url": "https://example.invalid/url-1"
+              },
+              {
+                "display_url": "example.invalid/source-2",
+                "expanded_url": "https://example.invalid/expanded_url-2",
+                "url": "https://example.invalid/url-2"
+              }
+            ]
+          },
+          "author": {
+            "rest_id": "9000000000000000001",
+            "name": null,
+            "screen_name": null,
+            "avatar": null,
+            "followers_count": null,
+            "blue_verified": true
+          }
+        },
+        {
+          "tweet_id": "9000000000000000004",
+          "bookmarks": 33,
+          "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+          "favorites": 33,
+          "text": "合成测试正文 2：用于验证回复、引用及转发结构。",
+          "lang": "zh",
+          "sensitive": null,
+          "source": null,
+          "views": "102",
+          "quotes": 0,
+          "entities": [],
+          "replies": 31,
+          "retweets": 32,
+          "conversation_id": "9000000000000000004",
+          "media": [],
+          "author": {
+            "rest_id": "9000000000000000001",
+            "name": null,
+            "screen_name": null,
+            "avatar": null,
+            "followers_count": null,
+            "blue_verified": true
+          },
+          "quoted": {
+            "tweet_id": "9000000000000000005",
+            "bookmarks": 40,
+            "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+            "favorites": 40,
+            "text": "合成测试正文 3：用于验证回复、引用及转发结构。",
+            "lang": "zh",
+            "views": "103",
+            "sensitive": false,
+            "quotes": 37,
+            "replies": 38,
+            "retweets": 39,
+            "conversation_id": "9000000000000000005",
+            "author": {
+              "rest_id": "9000000000000000001",
+              "name": null,
+              "screen_name": null,
+              "avatar": null,
+              "followers_count": null,
+              "blue_verified": true
+            },
+            "media": {
+              "photo": [
+                {
+                  "media_url_https": "https://example.invalid/media_url_https-1.jpg",
+                  "id": "9000000000000000006",
+                  "sizes": {
+                    "h": 360,
+                    "w": 640
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "tweet_id": "9000000000000000007",
+          "bookmarks": 33,
+          "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+          "favorites": 33,
+          "text": "合成测试正文 4：用于验证回复、引用及转发结构。",
+          "lang": "zh",
+          "sensitive": false,
+          "source": null,
+          "views": "104",
+          "quotes": 30,
+          "entities": [],
+          "replies": 31,
+          "retweets": 0,
+          "conversation_id": "9000000000000000007",
+          "media": {
+            "video": [
+              {
+                "media_url_https": "https://example.invalid/media_url_https-2.jpg",
+                "variants": [
+                  {
+                    "content_type": "application/x-mpegURL",
+                    "url": "https://example.invalid/url-3"
+                  },
+                  {
+                    "bitrate": 128000,
+                    "content_type": "video/mp4",
+                    "url": "https://example.invalid/url-4.mp4"
+                  },
+                  {
+                    "bitrate": 128000,
+                    "content_type": "video/mp4",
+                    "url": "https://example.invalid/url-5.mp4"
+                  },
+                  {
+                    "bitrate": 128000,
+                    "content_type": "video/mp4",
+                    "url": "https://example.invalid/url-6.mp4"
+                  },
+                  {
+                    "bitrate": 128000,
+                    "content_type": "video/mp4",
+                    "url": "https://example.invalid/url-7.mp4"
+                  }
+                ],
+                "aspect_ratio": [
+                  16,
+                  9
+                ],
+                "duration": 1000,
+                "original_info": {
+                  "focus_rects": [],
+                  "height": 360,
+                  "width": 640
+                },
+                "id": "9000000000000000008"
+              }
+            ]
+          },
+          "author": {
+            "rest_id": "9000000000000000001",
+            "name": null,
+            "screen_name": null,
+            "avatar": null,
+            "followers_count": null,
+            "blue_verified": true
+          },
+          "quoted": {
+            "tweet_id": "9000000000000000005",
+            "bookmarks": 40,
+            "created_at": "Tue Jan 02 12:00:00 +0000 2024",
+            "favorites": 40,
+            "text": "合成测试正文 5：用于验证回复、引用及转发结构。",
+            "lang": "zh",
+            "views": "105",
+            "sensitive": false,
+            "quotes": 37,
+            "replies": 38,
+            "retweets": 39,
+            "conversation_id": "9000000000000000005",
+            "author": {
+              "rest_id": "9000000000000000001",
+              "name": null,
+              "screen_name": null,
+              "avatar": null,
+              "followers_count": null,
+              "blue_verified": true
+            },
+            "media": {
+              "photo": [
+                {
+                  "media_url_https": "https://example.invalid/media_url_https-1.jpg",
+                  "id": "9000000000000000006",
+                  "sizes": {
+                    "h": 360,
+                    "w": 640
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

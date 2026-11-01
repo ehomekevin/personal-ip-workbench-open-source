@@ -1,0 +1,14 @@
+import { ContractError, type ContentPlansRow, type ContentPlanRevisionsRow } from '@workbench/contracts';
+import type { DatabaseSync } from '../connection/index.ts';
+export class ContentPlanStore {
+  readonly db:DatabaseSync;constructor(db:DatabaseSync) {this.db=db;}
+  plan(workspaceId:string,id:string):ContentPlansRow {const row=this.db.prepare('SELECT * FROM content_plans WHERE workspace_id=? AND id=?').get(workspaceId,id);if(!row)throw new ContractError('NOT_FOUND','内容计划不存在');return row as unknown as ContentPlansRow;}
+  revision(workspaceId:string,planId:string,id:string):ContentPlanRevisionsRow {this.plan(workspaceId,planId);const row=this.db.prepare('SELECT * FROM content_plan_revisions WHERE workspace_id=? AND plan_id=? AND id=?').get(workspaceId,planId,id);if(!row)throw new ContractError('NOT_FOUND','修订不属于此内容计划');return row as unknown as ContentPlanRevisionsRow;}
+  list(workspaceId:string,variantId:string):ContentPlansRow[] {return this.db.prepare('SELECT * FROM content_plans WHERE workspace_id=? AND variant_id=? ORDER BY created_at,id').all(workspaceId,variantId) as unknown as ContentPlansRow[];}
+  revisions(workspaceId:string,planId:string) {return this.db.prepare('SELECT id,revision_no,input_hash FROM content_plan_revisions WHERE workspace_id=? AND plan_id=? ORDER BY revision_no').all(workspaceId,planId).map(row=>({id:String(row.id),revision_no:Number(row.revision_no),input_hash:String(row.input_hash)}));}
+  insertPlan(workspaceId:string,id:string,variantId:string) {this.db.prepare('INSERT INTO content_plans (id,workspace_id,variant_id,version) VALUES (?,?,?,1)').run(id,workspaceId,variantId);}
+  insertRevision(row:{id:string;workspace_id:string;plan_id:string;revision_no:number;parent_revision_id:string|null;variant_revision_id:string;format:string;units:string;title_revision_id:string|null;caption_revision_id:string|null;cover_asset_id:string|null;input_hash:string;input_manifest:string}) {this.db.prepare('INSERT INTO content_plan_revisions (id,workspace_id,plan_id,revision_no,parent_revision_id,variant_revision_id,format,schema_version,units,title_revision_id,caption_revision_id,cover_asset_id,input_hash,input_manifest) VALUES (?,?,?,?,?,?,?,\'content-units.v1\',?,?,?,?,?,?)').run(row.id,row.workspace_id,row.plan_id,row.revision_no,row.parent_revision_id,row.variant_revision_id,row.format,row.units,row.title_revision_id,row.caption_revision_id,row.cover_asset_id,row.input_hash,row.input_manifest);}
+  head(workspaceId:string,id:string,revisionId:string,expectedVersion:number,initial=false) {const result=this.db.prepare('UPDATE content_plans SET head_content_revision_id=?,version=?,updated_at=? WHERE workspace_id=? AND id=? AND version=?').run(revisionId,initial?1:expectedVersion+1,new Date().toISOString(),workspaceId,id,expectedVersion);if(Number(result.changes)!==1)throw new ContractError('VERSION_CONFLICT','内容计划保存发生竞争');}
+}
+
+export {getPlanExecution,planExecutionState} from './execution.ts';

@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+import type { ServiceConfiguration } from '../../packages/contracts/src/index.ts';
+import { startApplication } from '../../apps/service/src/bootstrap/application.ts';
+import { createRetroModule } from '../../apps/service/src/routes/retro.ts';
+import { createBusinessOutcomesModule } from '../../apps/service/src/routes/business-outcomes.ts';
+import { createDailyPlansModule } from '../../apps/service/src/routes/daily-plans.ts';
+import { createOverviewModule } from '../../apps/service/src/routes/overview.ts';
+const configuration=JSON.parse(readFileSync(process.argv[2]!,'utf8')) as ServiceConfiguration;
+const application=await startApplication(configuration,{port:0,moduleFactories:[createRetroModule,createBusinessOutcomesModule,createDailyPlansModule,createOverviewModule]});
+process.send?.({kind:'ready',pid:process.pid,port:application.address.port,boot_id:application.boot_id});
+process.once('SIGTERM',()=>{void application.close().then(()=>process.exit(0),error=>{process.send?.({kind:'error',message:String(error)});process.exit(1);});});

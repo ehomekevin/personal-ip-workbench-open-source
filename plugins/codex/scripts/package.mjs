@@ -1,0 +1,12 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parseBuildArgs, copyTemplate, stageRuntime, archivePackage } from './package-lib.mjs';
+const options = parseBuildArgs(process.argv.slice(2));
+await mkdir(options.out, { recursive: false });
+const root = join(options.out, 'personal-ip-workbench');
+await copyTemplate(fileURLToPath(new URL('../template', import.meta.url)), root);
+await stageRuntime(root, options);
+const archive = await archivePackage(root, join(options.out, 'personal-ip-workbench-codex-0.1.0.zip'), 'codex');
+await writeFile(join(options.out, 'artifact-manifest.json'), JSON.stringify({ plugin_id: 'personal-ip-workbench', plugin_version: '0.1.0', package_form: 'agent_plugins_v1', host_surfaces: ['codex_desktop'], node_target: 24, installation: 'not_run', artifact: archive }, null, 2) + '\n');
+process.stdout.write(JSON.stringify({ artifact: archive.file, sha256: archive.sha256, installation: 'not_run' }) + '\n');

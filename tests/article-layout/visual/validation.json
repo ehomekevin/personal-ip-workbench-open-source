@@ -1,0 +1,41 @@
+{
+  "task": "WECHAT-LAYOUT-STUDIO-01/r1",
+  "scope": "layout-check leaf preparation",
+  "fixture": true,
+  "real_native_processes": 0,
+  "real_native_submissions": 0,
+  "image_generation_calls": 0,
+  "typecheck": {
+    "command": "node node_modules/typescript/bin/tsc -p tests/article-layout/visual/typecheck.json",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "2a7823",
+        "wall_time_seconds": 0.0000055,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  },
+  "tests": {
+    "command": "node --test tests/article-layout/visual/native.test.ts",
+    "result": {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a62ff8",
+        "wall_time_seconds": 0.507422083,
+        "exit_code": 0,
+        "original_token_count": 491,
+        "output": "✔ fixture=true: rendered PNG + original standard image enter localImage and results retain bound IDs/null cost (26.158375ms)\n✔ fixture=true: missing/corrupt PNG, old render hash, cropped long article and source standard mismatch fail before native submit (39.279125ms)\n✔ fixture=true: model declaring only text fails without turn or silent fallback (8.799833ms)\n✔ fixture=true: missing original native images, content review fields, stale result binding and mismatched turn never pass (69.212167ms)\n✔ fixture=true: timeout persists known IDs and intent; same job/attempt cannot be submitted again (33.380833ms)\n✔ fixture=true: lost turn response preserves event known IDs, late query reads exact old turn with zero retry (18.5875ms)\n✔ fixture=true: query cannot invent IDs or infer a new current binding (8.448167ms)\n✔ fixture=true: denied tool request is unknown and never switches provider (14.861834ms)\n✔ production execution without exact candidate permit never constructs native client (3.543583ms)\n✔ production mode rejects mocked native factory; fixtures cannot be reported as native evidence (3.355625ms)\n✔ fixture=true: fragment hash ignores paths but structure and per-image metadata changes remain fenced (8.071833ms)\n✔ fixture=true: known layout issue binds block and source reference without copy grading; uncertainty remains uncertain (55.015875ms)\n✔ fixture=true: complete natural-height article is consumed as all contiguous slices and source standard image (27.4185ms)\n✔ fixture=true: PNG with valid signature but corrupt raster cannot enter a vision request (8.767292ms)\n✔ fixture=true: persisted cached result cannot swap binding, output or fixture/native source (55.60925ms)\n✔ fixture=true: failure persisting completed result stays unknown with null result and no second submit (22.302541ms)\nℹ tests 16\nℹ suites 0\nℹ pass 16\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 559.279958\n"
+      }
+    }
+  },
+  "code_review": "self_review_only; independent QA not_run",
+  "not_run": [
+    "production native image readiness",
+    "two real visual checks",
+    "shared bootstrap/job/router integration",
+    "formal UI/Obsidian/Wiki/WeChat validation"
+  ]
+}

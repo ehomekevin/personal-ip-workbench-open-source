@@ -1,0 +1,74 @@
+{
+  "schema_version": "layout-visual-leaf-candidate.v1",
+  "task": "WECHAT-LAYOUT-STUDIO-01/r1",
+  "files": [
+    {
+      "path": "packages/adapters/src/media/layout-check/README.md",
+      "size": 3243,
+      "sha256": "0b7a10f041beb10c0b89f4a2d0e3392499c1f17379dff0dd5771c31cc4f77250"
+    },
+    {
+      "path": "packages/adapters/src/media/layout-check/check.ts",
+      "size": 15251,
+      "sha256": "e6a7af9b9cc7424ced4881b3d421891b05f56069274130cab15be7acf9fb433e"
+    },
+    {
+      "path": "packages/adapters/src/media/layout-check/index.ts",
+      "size": 199,
+      "sha256": "fed48f77bebce0c32dad30b566f232f74a34d951a50f8079dd5bf4db934a12e9"
+    },
+    {
+      "path": "packages/adapters/src/media/layout-check/input.ts",
+      "size": 9966,
+      "sha256": "0aca9e641236f90f23318f939f2f469c788ef5757e7c5966285983dd0f62fe8e"
+    },
+    {
+      "path": "packages/adapters/src/media/layout-check/native.ts",
+      "size": 4402,
+      "sha256": "4c36b289c4dea150374e5af1bbddf0442a489460e47af268b36ddd8463446f4a"
+    },
+    {
+      "path": "packages/adapters/src/media/layout-check/types.ts",
+      "size": 3096,
+      "sha256": "8d17c59d8f0529f2f3d5090e1ab6f06eff576ecc49663b6cfe9b4cc41e08aa2f"
+    },
+    {
+      "path": "tests/article-layout/visual/capability-inspection.json",
+      "size": 1616,
+      "sha256": "9212ff837e946ee906599dfbd7a6463aaaeb0db00574c4882a2e1d0e533aea43"
+    },
+    {
+      "path": "tests/article-layout/visual/fixtures/original-standard.html",
+      "size": 10421,
+      "sha256": "26dea64f8066382d130f2db6480f805085d02ce5c63a4972ba3a7d807eeb4b96"
+    },
+    {
+      "path": "tests/article-layout/visual/fixtures/original-standard.png",
+      "size": 150971,
+      "sha256": "613da7c52607477d1949272a6b0a153b67b0d677ea37739a43359b73e391586e"
+    },
+    {
+      "path": "tests/article-layout/visual/native.test.ts",
+      "size": 18924,
+      "sha256": "ca2660f34d4dc50b30abb25776026b28699783caa1514f8ce662630a002db1f7"
+    },
+    {
+      "path": "tests/article-layout/visual/typecheck.json",
+      "size": 155,
+      "sha256": "b7d57badf6b21456c223bb0c041be7f0774ec58549b575bfbaa0f8a50a4771a6"
+    },
+    {
+      "path": "tests/article-layout/visual/validation.json",
+      "size": 3102,
+      "sha256": "f6550650db25c40b6ed47f6a20798e05f22a8a6e3930071c00723025a8539097"
+    }
+  ],
+  "candidate_sha256": "cd0ba86e78ff61dd9b55068bff77adb6dc33eb7184d55932ed0a905415dc2b0f",
+  "validation": {
+    "scoped_typecheck": "passed",
+    "fixture_tests": "16/16 passed",
+    "real_native_submissions": 0,
+    "image_generation_calls": 0
+  },
+  "writer_stopped": true
+}

@@ -1,0 +1,29 @@
+import { objectSchema } from './validation.ts';
+import { ContractError } from './errors.ts';
+import { NATIVE_STATES } from './common.ts';
+import type { NativeIdentity, NativeState } from './common.ts';
+import type { JsonObject } from './common.ts';
+import type { ResultReceiptsRow } from './entities.ts';
+export interface NativeObservedState {sequence:number;native_state:NativeState;observed_at:string;native_evidence_ref:string}
+export interface RegisterObserverRequest {host_connection_id:string;observer_epoch:string;capability_record_id:string;capability_version:number}
+export interface BindNativeTaskRequest {observer_epoch:string;native_identity:NativeIdentity}
+export interface ObserveNativeTaskRequest extends NativeObservedState {observer_epoch:string}
+export interface ReattachNativeTaskRequest {observer_epoch:string;native_identity:NativeIdentity;observation:NativeObservedState}
+export interface HostFrozenTarget {document_id:string;base_revision_id:string|null;core_revision_id:string|null}
+export interface BeginHostRunRequest {kind:string;mode:'candidate'|'initialize'|'recommendation';targets:HostFrozenTarget[];source_ids:string[];instruction:string;request_context:'conversation'|'page_action';native_task_binding_id:string;expected_version:number;recommendation_kind?:'topic'|'account'}
+export interface RenewHostRunRequest {attempt_id:string;attempt_generation:number;observation_id:string;expected_version:number}
+export interface ReceiveHostOutputRequest {attempt_id:string;attempt_generation:number;expected_version:number;input_hash:string;typed_output:{documents:Array<{document_id:string;text:string}>;recommendations:Array<{payload:JsonObject;source_ids:string[];rationale:string}>}}
+export interface HostResultReceiptView {receipt_id:string;job_id:string;attempt_id:string;attempt_generation:number;state:ResultReceiptsRow['state'];input_hash:string;output_hash:string;results:JsonObject;quarantine_reason:string|null;files:Array<{intent_id:string;state:string;hash:string;error:JsonObject|null}>}
+export interface HostRunView {job_id:string;attempt_id:string;attempt_generation:number;version:number;native_task_binding_id:string;observer_id:string;observer_epoch:string;input_manifest:JsonObject;input_hash:string;output_schema:JsonObject;lease_until:string;output_deadline:string|null}
+const id={type:'string',minLength:1},positive={type:'integer',minimum:1},nullable={type:['string','null'],minLength:1};
+const nativeIdentity={type:'object',required:['scope','native_namespace'],properties:{scope:{type:'string',enum:['turn','task']},native_namespace:id,native_session_id:nullable,native_turn_id:nullable,native_task_id:nullable},additionalProperties:false};
+const observation={type:'object',required:['sequence','native_state','observed_at','native_evidence_ref'],properties:{sequence:positive,native_state:{type:'string',enum:NATIVE_STATES},observed_at:id,native_evidence_ref:id},additionalProperties:false};
+function identity(value:unknown){const i=value as NativeIdentity;if(i.scope==='turn'&&(!i.native_session_id||!i.native_turn_id||i.native_task_id)||i.scope==='task'&&(!i.native_task_id||i.native_turn_id))throw new ContractError('VALIDATION_ERROR','原生任务身份字段与 scope 不符');}
+export const RegisterObserverSchema=objectSchema<RegisterObserverRequest>(['host_connection_id','observer_epoch','capability_record_id','capability_version'],{host_connection_id:id,observer_epoch:id,capability_record_id:id,capability_version:positive});
+export const BindNativeTaskSchema=objectSchema<BindNativeTaskRequest>(['observer_epoch','native_identity'],{observer_epoch:id,native_identity:nativeIdentity},v=>identity(v.native_identity));
+export const ObserveNativeTaskSchema=objectSchema<ObserveNativeTaskRequest>(['observer_epoch',...observation.required],{observer_epoch:id,...observation.properties});
+export const ReattachNativeTaskSchema=objectSchema<ReattachNativeTaskRequest>(['observer_epoch','native_identity','observation'],{observer_epoch:id,native_identity:nativeIdentity,observation},v=>identity(v.native_identity));
+export const BeginHostRunSchema=objectSchema<BeginHostRunRequest>(['kind','mode','targets','source_ids','instruction','request_context','native_task_binding_id','expected_version'],{kind:id,mode:{type:'string',enum:['candidate','initialize','recommendation']},targets:{type:'array',items:{type:'object',required:['document_id','base_revision_id','core_revision_id'],properties:{document_id:id,base_revision_id:nullable,core_revision_id:nullable},additionalProperties:false}},source_ids:{type:'array',items:id},instruction:id,request_context:{type:'string',enum:['conversation','page_action']},native_task_binding_id:id,expected_version:positive,recommendation_kind:{type:'string',enum:['topic','account']}});
+export const RenewHostRunSchema=objectSchema<RenewHostRunRequest>(['attempt_id','attempt_generation','observation_id','expected_version'],{attempt_id:id,attempt_generation:positive,observation_id:id,expected_version:positive});
+// 固定目标、用途、来源和提交权仍由统一finalizer核对；这里公开HTTP的结构边界。
+export const ReceiveHostOutputSchema=objectSchema<ReceiveHostOutputRequest>(['attempt_id','attempt_generation','expected_version','input_hash','typed_output'],{attempt_id:id,attempt_generation:positive,expected_version:positive,input_hash:{type:'string',minLength:64,maxLength:64},typed_output:{type:'object',required:['documents','recommendations'],properties:{documents:{type:'array',items:{type:'object',required:['document_id','text'],properties:{document_id:id,text:{type:'string'}},additionalProperties:false}},recommendations:{type:'array',items:{type:'object',required:['payload','source_ids','rationale'],properties:{payload:{type:'object'},source_ids:{type:'array',items:id},rationale:{type:'string'}},additionalProperties:false}}},additionalProperties:false}});

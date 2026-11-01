@@ -1,0 +1,22 @@
+{
+  "name": "@workbench/host-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@workbench/contracts": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "zod": "4.6.5"
+  },
+  "exports": {
+    "./core": "./src/core/index.ts",
+    "./codex": "./src/codex/index.ts",
+    "./claude-desktop": "./src/claude-desktop/index.ts",
+    "./cowork": "./src/cowork/index.ts",
+    "./claude-code": "./src/claude-code/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

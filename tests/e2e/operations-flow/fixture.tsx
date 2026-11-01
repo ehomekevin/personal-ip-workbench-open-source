@@ -1,0 +1,24 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {Workbench} from '../../../apps/web/src/app/Workbench.tsx';
+import {initialUi,type ViewContext} from '../../../apps/web/src/app/view-model.ts';
+import {emptyTopicOperations} from '../../../packages/contracts/src/operations.ts';
+import '../../../apps/web/src/styles/approved.css';
+import '../../../apps/web/src/styles/skills.css';
+import '../../../apps/web/src/styles/today-continuation.css';
+
+let state='partial',topic='fixture-first',mounted=true,instance=0;
+const app=createRoot(document.getElementById('root')!);
+const log:string[]=[];
+function projection(page:string):ViewContext {
+ const data=emptyTopicOperations();data.brief.takeaway='读者能按真实状态继续创作，先确认核心稿，再核对每个平台稿。';data.brief.reader_task='做完第一篇内容后，知道下一步在哪。';
+ if(state==='complete'){data.feedback=[{id:'f1',text:'在哪里查看发布后的反馈？',kind:'question',source:'https://example.org/feedback',work_url:'https://example.org/work',recorded_at:'2026-10-13T08:00:00Z'} as any];data.followups=[{topic_id:'next',title:'发布后的真实反馈如何带回选题',new_help:'展示已确认的读者问题'} as any];}
+ const candidate=state==='candidate';
+ return {provenance:'service',ui:{...initialUi(page as any),topic},state:{version:1,agent:'codex',api:false,compact:false,favorites:[],adopted:false,topics:[{id:topic,title:topic==='fixture-first'?'我把 AI 资讯接进工作台，看看候选怎样成为一篇能用的内容':'长主题验证：面对实际读者的操作问题，把已有实测材料整理成下一条具体教程，而不是自动确认未核对的稿件',category:'AI实践',source:'个人实测',confirmed:state!=='core-unconfirmed'&&!candidate,coreRev:1,core:'已有核心稿，还需本人核对。',versions:{xiaohongshu:{title:'平台草稿',text:'已生成但未确认',rev:1,edited:false,status:'待核对'}},assets:[],shots:[]}],schedules:[],publications:[],accounts:[],notes:{},business:{count:null,source:'无'}},projections:{operations:{topicId:topic,title:topic==='fixture-first'?'我把 AI 资讯接进工作台，看看候选怎样成为一篇能用的内容':'长主题验证：面对实际读者的操作问题，把已有实测材料整理成下一条具体教程，而不是自动确认未核对的稿件',snapshot:{topic_id:topic,document:candidate?null:{head_revision_id:'ops-confirmed'} as any,data,automation:{state:candidate?'candidate':'confirmed',candidate:candidate?{id:'candidate',status:'pending',data:{brief:data.brief,feedback_labels:[],followups:[],limitations:[]},feedback:[]}:null,limitations:[],error:null,feedback_status:'ready'} as any},coreConfirmed:state!=='core-unconfirmed'&&!candidate,variantCount:candidate?0:1,publishedWorks:state==='complete'?[{id:'work',url:'https://example.org/work',platform:'xiaohongshu'}]:[]},today:{dateHeading:'2026年10月13日',budgetMinutes:60,favoritePercent:null,favoriteDelta:'—',comparableWorks:null,next:{time:'—',platform:null,title:'尚无排期'},spark:{previousPath:'',currentPath:''}}},NEWS:[1,2,3].map(i=>({id:'n'+i,title:'本地验收资讯 '+i,category:'AI',time:'今天',source:'隔离夹具',summary:'这是一条用于验证页面滚动和布局的记录。不会调用外部来源或写入真实运营资料。',body:'',sources:[]})),KNOWLEDGE:[],files:new Map()};
+}
+const client:any={identity:async()=>({workspace_id:'isolated-flow-fixture',service_instance_id:'isolated-flow-fixture',contract_version:'1'}),request:async(method:string,path:string)=>{log.push(method+' '+path);if(method!=='GET')throw Error('fixture 禁止写入');if(path.includes('/api/v1/search'))return {items:[],next_cursor:null};if(path.includes('configuration'))return {preferences:{retro_days:7}};if(path.includes('skills'))return {catalog:[],routes:[],documents:[],version:1};throw Error('fixture 未定义只读请求 '+path);},getDocument:async()=>{throw Error('fixture 无远程文稿');},saveDocument:async()=>{throw Error('fixture 禁止保存');},cancelJob:async()=>{throw Error('fixture 无执行任务');}};
+function render(){instance++;const load=async(context:any)=>projection(context.ui.page);const dispatch=async(action:any,context:any)=>{log.push('action '+action.action);if(action.action==='select-topic'){context.surface.updateUi({topic});return projection(context.ui.page);}if(action.action==='search')context.surface.presentDialog({title:'搜索隔离页面',body:'<input class="field" id="global-search" aria-label="搜索内容" placeholder="搜索内容"><p>本地验收，未发送请求。</p>'});else if(action.action.startsWith('operations-'))context.surface.presentDialog({title:'核对运营候选 · 隔离验收',body:'<p>操作入口可用。这个夹具不会确认、生成或发布真实内容。</p><label class="field-label" for="fixture-note">检查输入</label><textarea class="field" id="fixture-note"></textarea>'});else context.surface.toast('隔离操作：'+action.action);};const features:any=Object.fromEntries(['today','create','schedule','retro','sources'].map(page=>[page,{page,load,dispatch}]));app.render(mounted?<Workbench key={instance} injection={{mode:'real',client,features,initialPage:'today'}}/>:<div className="empty">已卸载工作台</div>);}
+(document.getElementById('fixture-state') as HTMLSelectElement).addEventListener('change',event=>{state=(event.target as HTMLSelectElement).value;render();});
+document.getElementById('fixture-topic')!.addEventListener('click',()=>{topic=topic==='fixture-first'?'fixture-second':'fixture-first';render();});
+document.getElementById('fixture-mount')!.addEventListener('click',()=>{mounted=!mounted;render();});
+render();(window as any).flowFixture={log};

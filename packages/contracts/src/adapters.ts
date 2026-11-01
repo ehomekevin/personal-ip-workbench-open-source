@@ -1,0 +1,16 @@
+import type { CapabilityStatus, ContentFormat, EntityId, InputHash, JobEvent, JsonObject, JsonValue, MetricAvailability, MetricValue, NativeIdentity, NativeState, Platform, Rfc3339, Sha256 } from './common.ts';
+export interface CapabilityDescription { operation: string; status: CapabilityStatus; limitations: string[]; verified_at: Rfc3339 | null; evidence_ref: string | null }
+export interface AgentReadiness { executor_id: EntityId; runtime_version: string; auth_state: string; billing_route: string | null; models?: string[]; capabilities: CapabilityDescription[]; limitations: string[] }
+export interface AgentRunInput { job_id: EntityId; kind: string; task_instruction: string; target_document_id: EntityId | null; base_revision_id: EntityId | null; core_revision_id?: EntityId; input_manifest: JsonObject; allowed_tools: string[]; output_schema: JsonObject }
+export interface AgentRunHandle { runtime_session_id: string; runtime_turn_id?: string; supports_resume: boolean; checkpoint: JsonObject }
+export interface AgentResult { status: string; candidate_documents: JsonObject[]; evidence_links: JsonObject[]; asset_candidates: JsonObject[]; actual_usage: JsonObject | null; error?: JsonObject; resume_info: JsonObject }
+export interface RawResponseRef { path: string; sha256: Sha256; adapter_version: string }
+export interface SourceBatch { raw_response_ref: RawResponseRef; records: JsonObject[]; source_locations: JsonObject[]; next_checkpoint_candidate: JsonObject | null; warnings: string[] }
+export type MetricReading = MetricValue & { key: string; unit: string; definition_id: EntityId };
+export interface MetricsResult { platform: Platform; work_id: string; account_id: string | null; published_at?: Rfc3339 | null; observed_at: Rfc3339 | null; observed_time_basis: 'provider' | 'collector_verified' | 'unknown'; observed_time_reason?: string | null; metric_definition_version: string; metrics: MetricReading[]; raw_response_ref: RawResponseRef; availability: MetricAvailability }
+export interface PublishMember { member_key: string; position: number; text_revision_id: EntityId; payload_hash: Sha256; reply_to_member_key: string | null; platform_work_id?: string | null; state: string }
+export interface PublishInput { intent_id: EntityId; idempotency_key: string; account_id: EntityId; platform: Platform; format: ContentFormat; variant_revision_id: EntityId; content_plan_revision_id?: EntityId | null; core_approval_id: EntityId; artifact_manifest: JsonObject; input_hash: InputHash; scheduled_context?: JsonObject; members?: PublishMember[] }
+export interface PublishResult { state: string; phase: string; progress: JsonValue; remote_request_id?: string; draft_id?: string; work_ids: string[]; url?: string; published_at?: Rfc3339; continuation?: JsonObject; retryability: JsonObject; raw_response_ref: RawResponseRef; members?: JsonObject[] }
+export interface NativeObservation { binding_id: EntityId; observer_id: EntityId; observer_epoch: string; sequence: number; native_state: NativeState; observed_at: Rfc3339; received_at: Rfc3339; native_evidence_ref: string }
+export interface HostObserverHandle { native_task_binding_id: EntityId; native_identity: NativeIdentity; observer_id: EntityId; observer_epoch: string }
+export type AdapterEvent = JobEvent;

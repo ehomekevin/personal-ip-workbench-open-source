@@ -1,0 +1,37 @@
+{
+  "name": "@workbench/storage",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./connection": "./src/connection/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./revisions": "./src/revisions/index.ts",
+    "./files": "./src/files/index.ts",
+    "./assets": "./src/assets/index.ts",
+    "./identity": "./src/identity/index.ts",
+    "./settings": "./src/settings/index.ts",
+    "./jobs": "./src/jobs/index.ts",
+    "./receipts": "./src/receipts/index.ts",
+    "./sources": "./src/sources/index.ts",
+    "./knowledge-index": "./src/knowledge-index/index.ts",
+    "./works": "./src/works/index.ts",
+    "./metrics": "./src/metrics/index.ts",
+    "./comparisons": "./src/comparisons/index.ts",
+    "./daily-plans": "./src/daily-plans/index.ts",
+    "./retro": "./src/retro/index.ts",
+    "./business-outcomes": "./src/business-outcomes/index.ts",
+    "./recommendations": "./src/recommendations/index.ts",
+    "./host-tracking": "./src/host-tracking/index.ts",
+    "./content-plans": "./src/content-plans/index.ts",
+    "./production-plans": "./src/production-plans/index.ts",
+    "./publications": "./src/publications/index.ts",
+    "./publishing-settings": "./src/publishing-settings/index.ts"
+  },
+  "dependencies": {
+    "@workbench/contracts": "workspace:*"
+  }
+}

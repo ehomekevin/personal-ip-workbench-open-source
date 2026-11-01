@@ -1,0 +1,78 @@
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+playwright-report/
+test-results/
+/runtime/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.DS_Store
+
+# 本机预览与浏览器临时状态
+.preview/
+.playwright-mcp/
+.playwright-cli/
+.vite/
+*.tsbuildinfo
+
+# 凭据与本机数据库；配置示例可以入库
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+*.db
+*.db-shm
+*.db-wal
+
+# Python 工具缓存
+.venv/
+__pycache__/
+*.py[cod]
+
+# 动画演示已有独立 Git 仓库
+/showcase-animation/
+
+# CI / E2E 的每次运行报告与隔离数据
+/.ci-artifacts/
+
+# 隔离测试自建的临时工作区，由测试 harness 自行回收
+/tests/documents/.wp08-*/
+/tests/job-recovery/.wp09-*/
+/tests/ingest-index/.wp11-*/
+/tests/metrics/.wp12-*/
+/tests/comparisons/.wp13-*/
+/tests/retro-adoption/.wp14-*/
+/tests/daily-plans/.wp14-*/
+/tests/service-agent/.wp15-*/
+/tests/content-workflows/.wp16-*/
+/tests/host-runs/.wp17-*/
+/tests/plans/.wp18-*/
+/tests/media-artifacts/.wp19-*/
+/tests/publication-domain/.wp20-*/
+
+# Private local operations and content are not source distribution.
+/.codex/
+/.agents/
+/config.local.json
+/config.*.local.json
+/browser-state/
+/private/
+/raw-responses/
+/backups/
+*.har
+*.log
+*.pem
+*.key
+
+# Temporary workspaces created by isolated test harnesses.
+/tests/image-studio/.studio-*/
+/tests/image-providers/.image-*/
+/tests/service-agent/.writing-skill-*/
+/tests/bootstrap/.storage-path-*/
+/tests/.storage-policy-*/
+/ci-reports/

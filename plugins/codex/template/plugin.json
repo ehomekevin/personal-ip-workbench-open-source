@@ -1,0 +1,29 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "personal-ip-workbench",
+  "version": "0.1.0",
+  "description": "在当前会话打开个人 IP 工作台，通过同一主服务读取与保存内容。",
+  "author": {
+    "name": "ehomekevin"
+  },
+  "license": "LicenseRef-Private",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "个人 IP 工作台",
+        "shortDescription": "七页面工作台与当前主题协作",
+        "longDescription": "私有本机插件。连接已运行的同一主服务；可视、工具调用和原生任务追踪分别验收。",
+        "developerName": "ehomekevin",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "打开个人 IP 工作台",
+          "读取当前主题已保存的稿件与修改意见"
+        ]
+      }
+    }
+  }
+}

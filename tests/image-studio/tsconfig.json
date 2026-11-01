@@ -1,0 +1,4 @@
+{
+  "extends": "../../tsconfig.ci.json",
+  "include": ["./*.ts", "../ui-fidelity/image-studio.browser.ts"]
+}

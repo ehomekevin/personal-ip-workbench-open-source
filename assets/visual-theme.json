@@ -1,0 +1,20 @@
+{
+  "schema_version": "workbench-visual-theme.v1",
+  "name": "Workbench neutral",
+  "colors": {
+    "text": "#0b1f52",
+    "background": "#ffffff",
+    "panel": "#f4f5fc",
+    "accent": "#ccf866"
+  },
+  "typography": {
+    "heading": "system-ui",
+    "body": "system-ui",
+    "numeric": "monospace"
+  },
+  "assets": [],
+  "constraints": [
+    "Do not add a personal name, avatar, logo or platform trademark.",
+    "Use only user-provided references and explicitly requested text."
+  ]
+}

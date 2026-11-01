@@ -1,0 +1,14 @@
+import { objectSchema, type RuntimeSchema } from './validation.ts';
+import type { CreatePublicationBatchRequest, CreateScheduleRequest, PatchScheduleRequest } from './publications.ts';
+const id={type:'string',minLength:1,maxLength:200};
+export const targetProperties={variant_id:id,variant_revision_id:id,account_id:id,core_approval_id:id,content_plan_revision_id:{...id,type:['string','null']},artifact_id:{...id,type:['string','null']}};
+export const targetRequired=['variant_id','variant_revision_id','account_id','core_approval_id'];
+const target={type:'object',required:targetRequired,properties:targetProperties,additionalProperties:false};
+export const CreatePublicationBatchSchema=objectSchema<CreatePublicationBatchRequest>(['targets'],{targets:{type:'array',minItems:1,maxItems:20,items:target},presentation:{type:'string',enum:['foreground_dialog','background','host_conversation']}});
+const timeProperties={due_at:{type:'string',minLength:20,maxLength:30},timezone:{type:'string',minLength:1,maxLength:100},local_time:{type:'string',minLength:20,maxLength:35}};
+export const CreateScheduleSchema=objectSchema<CreateScheduleRequest>([...targetRequired,...Object.keys(timeProperties)],{...targetProperties,...timeProperties});
+export const PublicationExpectedVersionSchema=objectSchema<{expected_version:number}>(['expected_version'],{expected_version:{type:'integer',minimum:1}});
+export const PublicationReconcileSchema=objectSchema<{job_id:string}>(['job_id'],{job_id:id});
+const changeTime=objectSchema<PatchScheduleRequest>(['expected_version','operation',...Object.keys(timeProperties)],{expected_version:{type:'integer',minimum:1},operation:{type:'string',enum:['change_time']},...timeProperties});
+const replaceContent=objectSchema<PatchScheduleRequest>(['expected_version','operation','expected_intent_version','target'],{expected_version:{type:'integer',minimum:1},operation:{type:'string',enum:['replace_content']},expected_intent_version:{type:'integer',minimum:1},target});
+export const PatchScheduleSchema:RuntimeSchema<PatchScheduleRequest>={jsonSchema:{oneOf:[changeTime.jsonSchema,replaceContent.jsonSchema]},parse(value){return value&&typeof value==='object'&&'operation' in value&&value.operation==='change_time'?changeTime.parse(value):replaceContent.parse(value);}};

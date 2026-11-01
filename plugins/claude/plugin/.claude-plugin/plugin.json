@@ -1,0 +1,9 @@
+{
+  "name": "personal-ip-workbench",
+  "version": "0.1.0",
+  "description": "打开个人 IP 工作台，通过同一主服务读取与保存当前主题。",
+  "author": {
+    "name": "ehomekevin"
+  },
+  "license": "LicenseRef-Private"
+}
