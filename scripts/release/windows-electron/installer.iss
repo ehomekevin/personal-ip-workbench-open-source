@@ -28,4 +28,4 @@ Source: "{#StageDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Name: "{userprograms}\创作有数"; Filename: "{app}\Chuangzuoyoushu.exe"; AppUserModelID: "org.chuangzuoyoushu.desktop"
 
 [Run]
-Filename: "{app}\Chuangzuoyoushu.exe"; Description: "启动创作有数"; Flags: postinstall nowait skipifsilent
+Filename: "{app}\Chuangzuoyoushu.exe"; Description: "启动创作有数"; Flags: postinstall nowait skipifsilent unchecked

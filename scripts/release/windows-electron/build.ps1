@@ -38,7 +38,13 @@ try {
   $app = (New-Item "$stage/resources/app" -ItemType Directory).FullName
   foreach ($file in 'package.json','main.cjs','policy.cjs','sidecar.mjs','icon.ico') { Copy-Item -LiteralPath "$PSScriptRoot/$file" $app }
   $core = (New-Item "$stage/resources/core" -ItemType Directory).FullName
-  tar.exe -xf $coreZip -C $core app web runtime/node.exe licenses LICENSE THIRD_PARTY_NOTICES.md release.json
+  # Windows tar fails even when only scanning the old ZIP's UTF-8 launcher names.
+  [IO.Compression.ZipFile]::ExtractToDirectory($coreZip, "$scratch/legacy")
+  foreach ($file in 'app','web','licenses','LICENSE','THIRD_PARTY_NOTICES.md','release.json') {
+    Move-Item -LiteralPath "$scratch/legacy/$file" -Destination $core
+  }
+  New-Item "$core/runtime" -ItemType Directory | Out-Null
+  Move-Item -LiteralPath "$scratch/legacy/runtime/node.exe" -Destination "$core/runtime"
   $base = Get-Content "$core/release.json" -Raw | ConvertFrom-Json
   if ($base.commit -ne '3f85c440595f8fd3a114e34bfe3abc95edefbbd3' -or $base.nodeVersion -ne '26.9.0' -or
       (Get-FileHash "$core/runtime/node.exe").Hash -ne '8490398f5e0082772dfb0ae5a6ebdff98a97696a20cb9778b4f82eec79b6d0a1') {
