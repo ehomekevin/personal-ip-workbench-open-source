@@ -14,14 +14,27 @@ function WaitName([string]$name) {
   throw "Element unavailable: $name"
 }
 function Press([string]$name) {
-  $e=WaitName $name
-  $a=$null
-  if ($e.TryGetCurrentPattern([Windows.Automation.InvokePattern]::Pattern,[ref]$a)) { $a.Invoke() }
-  else { $e.SetFocus();[Windows.Forms.SendKeys]::SendWait('{ENTER}') }
+  $conds=[Windows.Automation.Condition[]]@([Windows.Automation.PropertyCondition]::new($ui::NameProperty,$name),[Windows.Automation.PropertyCondition]::new($ui::ControlTypeProperty,[Windows.Automation.ControlType]::Button))
+  $cond=[Windows.Automation.AndCondition]::new($conds)
+  $last=''
+  for ($i=0;$i -lt 35;$i++) {
+    try {
+      $e=$root.FindFirst([Windows.Automation.TreeScope]::Descendants,$cond)
+      if ($e) {
+        $a=$null
+        if ($e.TryGetCurrentPattern([Windows.Automation.InvokePattern]::Pattern,[ref]$a)) {$a.Invoke();return}
+        $e.SetFocus();[Windows.Forms.SendKeys]::SendWait(' ');return
+      }
+    } catch {$last=$_.Exception.Message}
+    Start-Sleep -Milliseconds 300
+  }
+  throw "Could not activate $name ($last)"
 }
 try {
+  $null=WaitName '独立验收：书架手记'
   Press '选题与创作 01'
-  Press '核心稿'
+  Start-Sleep -Milliseconds 900
+  if (!(FindName '编辑核心稿')) {Press '核心稿'}
   $field=WaitName '编辑核心稿'
   $value=$field.GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern)
   if ($value.Current.Value -ne $ExpectText) {throw 'Old draft text mismatch in visible UIA editor'}
