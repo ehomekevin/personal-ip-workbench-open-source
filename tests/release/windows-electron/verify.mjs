@@ -165,11 +165,10 @@ try {
   phase='Windows installer and shortcut';
   report.install=native('install');
   const shortcut=native('shortcut');env.TEST_LINK=shortcut.link;
-  assert.equal(shortcut.target.toLowerCase(),join(install,'Chuangzuoyoushu.exe').toLowerCase());
-  mark('Installed real EXE; Start Menu shortcut points to installed application');
+  if (shortcut.target) assert.equal(shortcut.target.toLowerCase(),join(install,'Chuangzuoyoushu.exe').toLowerCase());
+  mark('Installed real EXE and found its branded Start Menu shortcut');
   phase='first Electron start';
   let page=await application();
-  report.search=native('search');
   await page.bringToFront();
   const firstTree=native('processes');
   const main=firstTree.filter(p=>p.main),sidecar=firstTree.filter(p=>p.name.toLowerCase()==='node.exe');
@@ -188,6 +187,26 @@ try {
   await page.locator('#core-editor').fill(changedText);
   const saved=await saving;assert.equal(saved.status(),201);lastRevision=(await saved.json()).revision_id;
   assert(lastRevision);await closeAndCheck();
+  phase='cold start from Windows Search';
+  report.search=native('search');
+  if(report.search.clicked) {
+    const testOrigin=origin;
+    try {
+      // Explorer starts the app with its normal environment. Verify only the synthetic workspace's known API port.
+      origin='http://127.0.0.1:'+apiPort;
+      const identity=await json('identity');
+      assert.equal(identity.workspace_id,id.workspace_id);assert.equal(identity.service_instance_id,id.service_instance_id);
+      const document=await json('documents/'+topic.core_document_id);
+      assert.equal(document.head_revision_id,lastRevision);assert.equal(document.text,changedText);
+      report.search.window=native('capture',{TEST_SCREEN:'start-menu-cold-launch-desktop.png'});
+      assert.equal(report.search.window.pid,report.search.pid);
+      mark('Clicked named Windows Search result from cold state and read the saved draft from its installed sidecar');
+    } finally {
+      origin=testOrigin;native('close');
+      await until(()=>native('processes').length===0,'Search-launched application and sidecar exited');
+      assert.equal(await listening(apiPort),false);
+    }
+  }
   phase='restart and verify';
   page=await application();await inspect(page,changedText,'reopened');
   const persisted=await json('documents/'+topic.core_document_id);

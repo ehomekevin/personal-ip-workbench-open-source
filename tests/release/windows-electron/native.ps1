@@ -22,6 +22,8 @@ public static class WindowTest {
     },IntPtr.Zero);
     return found;
   }
+  [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+  [DllImport("user32.dll")] public static extern void mouse_event(uint flags,uint x,uint y,uint data,UIntPtr extra);
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hwnd);
   [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
   [DllImport("user32.dll")] public static extern void keybd_event(byte key,byte scan,uint flags,UIntPtr extra);
@@ -89,8 +91,8 @@ switch ($Action) {
     $programs = [Environment]::GetFolderPath('Programs')
     $links = @(Get-ChildItem -LiteralPath $programs -Recurse -Filter '创作有数.lnk')
     if ($links.Count -ne 1) { throw "Expected one installed shortcut in '$programs'; found $($links.Count)" }
-    $lnk = (New-Object -ComObject WScript.Shell).CreateShortcut($links[0].FullName)
-    Json @{ link=$links[0].FullName; target=[Environment]::ExpandEnvironmentVariables($lnk.TargetPath); icon=$lnk.IconLocation }
+    $item = (New-Object -ComObject Shell.Application).NameSpace($links[0].DirectoryName).ParseName($links[0].Name)
+    Json @{ link=$links[0].FullName; target=$item.ExtendedProperty('System.Link.TargetParsingPath') }
   }
   'launch' { Start-Process -FilePath $env:TEST_LINK -ArgumentList "--remote-debugging-port=$env:TEST_CDP"; Json 'started' }
   'processes' {
@@ -116,27 +118,86 @@ switch ($Action) {
     Json @{ title=$p[0].MainWindowTitle; pid=$p[0].Id; capture=$screen }
   }
   'search' {
+    $shellNames = '^(SearchHost|SearchApp|SearchUI|StartMenuExperienceHost|explorer)$'
+    function ShellForeground {
+      $h = [WindowTest]::GetForegroundWindow()
+      if (!$h) { return $null }
+      $element = $ui::FromHandle($h)
+      $name = (Get-Process -Id $element.Current.ProcessId -ErrorAction SilentlyContinue).ProcessName
+      if ($name -match $shellNames) { return $element }
+    }
+    $clicked = $false
+    $seen = @()
     try {
-      if (!(Get-Process explorer -ErrorAction SilentlyContinue)) { throw 'Explorer unavailable' }
+      if ((AppProcess) -or !(Get-Process explorer -ErrorAction SilentlyContinue | Where-Object SessionId -eq ([Diagnostics.Process]::GetCurrentProcess().SessionId))) {
+        throw 'Expected a cold app and same-session Explorer'
+      }
+      # Open the Windows Search box directly; paste Unicode into the actual shell window.
       [WindowTest]::keybd_event(0x5b,0,0,0); [WindowTest]::keybd_event(0x53,0,0,0)
       [WindowTest]::keybd_event(0x53,0,2,0); [WindowTest]::keybd_event(0x5b,0,2,0)
-      Start-Sleep -Seconds 1
-      $fg = $ui::FromHandle([WindowTest]::GetForegroundWindow())
-      if ((Get-Process -Id $fg.Current.ProcessId).ProcessName -notmatch '^(SearchHost|SearchApp|StartMenuExperienceHost)$') { throw 'Search not foreground' }
-      [Windows.Forms.SendKeys]::SendWait('创作有数')
       Start-Sleep -Seconds 2
-      $result = $fg.FindAll($all,(Equal $ui::NameProperty '创作有数')) | Where-Object { !$_.Current.IsOffscreen } | Select-Object -First 1
-      if (!$result) { throw 'Search result not identified' }
-      $screenshot = TryCapture (Join-Path $env:TEST_REPORT 'start-menu-search.png')
-      # Search is read-only: Explorer cannot inherit this test's isolated workspace or port settings.
-      Json @{status='result_visible'; screenshot=$screenshot; clicked=$false}
-    } catch { Json @{status='not_run'; reason=$_.Exception.Message; clicked=$false} }
-    finally {
-      try {
-        $fg = $ui::FromHandle([WindowTest]::GetForegroundWindow())
-        if ((Get-Process -Id $fg.Current.ProcessId).ProcessName -match '^(SearchHost|SearchApp|StartMenuExperienceHost)$') { [Windows.Forms.SendKeys]::SendWait('{ESC}') }
-      } catch { }
-
+      $focus = $ui::FocusedElement
+      if (!(ShellForeground) -or (Get-Process -Id $focus.Current.ProcessId).ProcessName -notmatch $shellNames) { throw 'Search not focused' }
+      [Windows.Forms.Clipboard]::SetText('创作有数')
+      [Windows.Forms.SendKeys]::SendWait('^v')
+      $deadline = (Get-Date).AddSeconds(18)
+      $rect = $null
+      do {
+        Start-Sleep -Milliseconds 500
+        $fg = ShellForeground
+        if (!$fg) { continue }
+        $hosts = @($root.FindAll([System.Windows.Automation.TreeScope]::Children,[System.Windows.Automation.Condition]::TrueCondition) | Where-Object {
+          !$_.Current.IsOffscreen -and (Get-Process -Id $_.Current.ProcessId -ErrorAction SilentlyContinue).ProcessName -match '^(SearchHost|SearchApp|SearchUI|StartMenuExperienceHost)$'
+        })
+        foreach ($hostWindow in (@($fg) + $hosts)) {
+          $nodes = $hostWindow.FindAll($all,[System.Windows.Automation.Condition]::TrueCondition)
+          foreach ($node in $nodes) {
+            $title = $node.Current.Name
+            if ($node.Current.IsOffscreen -or $title -notmatch '^创作有数(?:$|[ ,，])') { continue }
+            $elem = $node
+            for ($depth=0; $elem -and $depth -lt 5; $depth++) {
+              $kind = $elem.Current.ControlType.ProgrammaticName
+              $label = $elem.Current.Name
+              $seen += "$kind $label"
+              if ($kind -match '\.(ListItem|DataItem|TreeItem|Button|Hyperlink)$' -and $label -match '^创作有数(?:$|[ ,，])' -and $label -notmatch '(web|search for|搜索网页|搜索网络)') {
+                $box = $elem.Current.BoundingRectangle
+                if (!$box.IsEmpty -and $box.Width -gt 0 -and $box.Height -gt 0) {
+                  $pt = [Windows.Point]::new([Math]::Floor($box.X + $box.Width/2),[Math]::Floor($box.Y + $box.Height/2))
+                  $hit = $ui::FromPoint($pt)
+                  for ($level=0; $hit -and $level -lt 9; $level++) {
+                    if ([System.Windows.Automation.Automation]::Compare($hit,$elem)) { $rect=$box; $matched=$label; break }
+                    $hit = [System.Windows.Automation.TreeWalker]::RawViewWalker.GetParent($hit)
+                  }
+                }
+                if ($rect) { break }
+              }
+              $elem = [System.Windows.Automation.TreeWalker]::RawViewWalker.GetParent($elem)
+            }
+            if ($rect) { break }
+          }
+          if ($rect) { break }
+        }
+      } until ($rect -or (Get-Date) -gt $deadline)
+      if (!$rect -or !(ShellForeground)) { throw 'App result absent or not safely clickable in the foreground search UI' }
+      $screen=TryCapture (Join-Path $env:TEST_REPORT 'start-menu-search.png')
+      if (![WindowTest]::SetCursorPos([int]$pt.X,[int]$pt.Y)) { throw 'Cannot point to verified app search result' }
+      [WindowTest]::mouse_event(2,0,0,0,0); [WindowTest]::mouse_event(4,0,0,0,0)
+      $clicked=$true
+      $deadline=(Get-Date).AddSeconds(30)
+      do { Start-Sleep -Milliseconds 300; $p=@(AppProcess | Where-Object MainWindowTitle -eq '创作有数') }
+      until ($p.Count -eq 1 -or (Get-Date) -gt $deadline)
+      if ($p.Count -ne 1) { throw 'Search click did not open the installed branded window' }
+      $listener=Get-NetTCPConnection -LocalAddress '127.0.0.1' -LocalPort ([int]$env:WORKBENCH_API_PORT) -State Listen
+      $child=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener.OwningProcess)"
+      if ($child.ParentProcessId -ne $p[0].Id -or $child.ExecutablePath -ne (Join-Path $env:TEST_INSTALL 'resources/core/runtime/node.exe')) {
+        throw 'Workspace API listener is not the installed window sidecar'
+      }
+      Json @{status='cold_started'; clicked=$true; result=$matched; pid=$p[0].Id; title=$p[0].MainWindowTitle; sidecar=$child.ProcessId; screenshot=$screen}
+    } catch {
+      $screen=TryCapture (Join-Path $env:TEST_REPORT 'start-menu-search-unavailable.png')
+      if ($clicked) { throw }
+      Json @{status='not_run'; reason=$_.Exception.Message; clicked=$false; screenshot=$screen; matches=@($seen | Select-Object -Unique -First 12)}
+      try { if (ShellForeground) { [Windows.Forms.SendKeys]::SendWait('{ESC}') } } catch { }
     }
   }
   'errorbox' {
