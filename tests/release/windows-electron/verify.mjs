@@ -216,13 +216,18 @@ try {
   await closeAndCheck();
   mark('Saved in renderer, closed normally, released all three ports, reopened via installed shortcut, read same revision, image and history');
   phase='occupied port and safe startup failure';
-  const sentinel=createServer(socket=>socket.end('owned by the test'));
+  const sentinel=createServer(socket=>{socket.on('error',()=>socket.destroy());socket.end('owned by the test');});
   await new Promise((ok,fail)=>sentinel.once('error',fail).listen(web,'127.0.0.1',ok));
   try {
     native('launch');
     report.occupiedPort=native('errorbox');
     await until(()=>native('processes').length===0,'failed launch cleaned up its own processes');
-    assert(await listening(web));assert.equal(await listening(apiPort),false);
+    const marker=await new Promise((ok,fail)=>{
+      const socket=connect(web,'127.0.0.1');let text='';socket.setEncoding('utf8');
+      socket.on('data',part=>text+=part).once('end',()=>ok(text)).once('error',fail);
+      socket.setTimeout(3000,()=>socket.destroy(Error('Port owner did not respond')));
+    });
+    assert.equal(marker,'owned by the test');assert.equal(await listening(apiPort),false);
     assert.equal(await listening(debug),false);
     mark('Occupied port showed actionable native error and left the other listener running');
   } finally {await new Promise(done=>sentinel.close(done));}
