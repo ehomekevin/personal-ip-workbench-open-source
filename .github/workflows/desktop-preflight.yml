@@ -39,7 +39,15 @@ jobs:
           Start-Sleep -Seconds 2
           (New-Object -ComObject WScript.Shell).SendKeys('notepad')
           Start-Sleep -Seconds 3
+          $ready=$false
+          for ($i=0;$i -lt 30;$i++) {
+            $sample=New-Object Drawing.Bitmap 1,1
+            $g=[Drawing.Graphics]::FromImage($sample)
+            try {$g.CopyFromScreen(154,233,0,0,$sample.Size);$c=$sample.GetPixel(0,0);$ready=($c.B -gt 150 -and $c.R -lt 50)} finally {$g.Dispose();$sample.Dispose()}
+            if ($ready) {break}; Start-Sleep -Seconds 1
+          }
           snap 'desk-search'
+          if (!$ready) {throw 'Best-match blue selection not rendered'}
           if ([Windows.Forms.Screen]::PrimaryScreen.Bounds.Width -ne 1024) {throw 'Reinspect search-result coordinates'}
           if (![Input]::SetCursorPos(220,233)) {throw 'cursor failed'}
           [Input]::mouse_event(2,0,0,0,[UIntPtr]::Zero); [Input]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
