@@ -20,7 +20,7 @@ function Press([string]$name) {
   else { $e.SetFocus();[Windows.Forms.SendKeys]::SendWait('{ENTER}') }
 }
 try {
-  Press '选题与创作'
+  Press '选题与创作 01'
   Press '核心稿'
   $field=WaitName '编辑核心稿'
   $value=$field.GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern)
@@ -32,8 +32,22 @@ try {
     Start-Sleep -Seconds 1
     if ($value.Current.Value -ne $SaveText) {throw 'Paste did not change visible editor'}
   }
+  function Snap($name) {
   $b=[Windows.Forms.Screen]::PrimaryScreen.Bounds;$img=[Drawing.Bitmap]::new($b.Width,$b.Height);$g=[Drawing.Graphics]::FromImage($img)
-  try {$g.CopyFromScreen($b.Location,[Drawing.Point]::Empty,$b.Size);$img.Save("$env:TEST_REPORT/$Capture.png")}finally{$g.Dispose();$img.Dispose()}
+  try {$g.CopyFromScreen($b.Location,[Drawing.Point]::Empty,$b.Size);$img.Save("$env:TEST_REPORT/$name.png")}finally{$g.Dispose();$img.Dispose()}
+  }
+  Snap $Capture
+  if (!$SaveText) {
+    Press '平台版本'
+    Press '查看上版稿'
+    $null=WaitName '第一次整理，先把常读的书放到桌边。'
+    Snap 'search-history'
+    Press '保留当前版'
+    Press '素材与视频'
+    Press '查看图片 本主题图片'
+    $null=WaitName '本主题图片'
+    Snap 'search-image'
+  }
 } catch {
   $root.FindAll([Windows.Automation.TreeScope]::Descendants,[Windows.Automation.Condition]::TrueCondition) |
     ForEach-Object { $_.Current.ControlType.ProgrammaticName+' '+$_.Current.Name } | Set-Content "$env:TEST_REPORT/editor-accessibility.txt"

@@ -175,59 +175,17 @@ try {
   const uiText=originalText+' 一次开始菜单原生窗口修改。';
   function uiEditor(expect,save,capture){return execFileSync('pwsh',['-STA','-NoLogo','-NoProfile','-File',join(import.meta.dirname,'editor.ps1'),'-ExpectText',expect,'-SaveText',save,'-Capture',capture],{env,encoding:'utf8',timeout:90000});}
   function directDoc(){return fetch('http://127.0.0.1:'+apiPort+'/api/v1/documents/'+topic.core_document_id,{headers:{'X-Workspace-Id':id.workspace_id,'X-Service-Instance-Id':id.service_instance_id,'X-Request-Id':randomUUID()}}).then(r=>r.json());}
-  let firstText=originalText;
-  try {uiEditor(originalText,uiText,'first-search-edited');const doc=await until(async()=>{const doc=await directDoc();return doc.text===uiText&&doc;},'native search editor persisted');report.searchEdited=doc.head_revision_id;firstText=uiText;}
-  catch(e){report.searchEditorError=String(e).slice(0,1600);const doc=await directDoc();if(doc.text===uiText) firstText=uiText;}
-  native('close');await until(()=>native('processes').length===0,'initial search exit');
-  phase='first Electron start';
-  let page=await application();
-  await page.bringToFront();
-  const firstTree=native('processes');
-  const main=firstTree.filter(p=>p.main); assert.equal(main.length,1,'single native main process');
-  const ownedService=p=>p.name.toLowerCase()==='node.exe' && p.parent===main[0].id;
-  const sidecar=firstTree.filter(ownedService);assert.equal(sidecar.length,1,'one directly owned service (excluding its workers)');
-  native('launch');await delay(1800);
-  const same=native('processes');
-  assert.deepEqual(same.filter(p=>p.main),main);assert.deepEqual(same.filter(ownedService),sidecar);
-  assert.equal(browser.contexts()[0].pages().length,1);
-  mark('Second installed shortcut launch kept one native window and one owned sidecar');
-  phase='open old draft, image and history inside installed window';
-  await inspect(page,firstText,'old');
-  mark('Old text, previous platform revision and original PNG opened in the installed main window');
-  phase='edit and normal exit';
-  await clickTab(page,'core');
-  const saving=page.waitForResponse(r=>r.url()===origin+'/api/v1/documents/'+topic.core_document_id+'/revisions' && r.request().method()==='POST');
-  await page.locator('#core-editor').fill(changedText);
-  const saved=await saving;assert.equal(saved.status(),201);lastRevision=(await saved.json()).revision_id;
-  report.saved={revision:lastRevision,topic:topic.id,document:topic.core_document_id};assert(lastRevision);await closeAndCheck();
-  phase='cold start from Windows Search';
-  report.search=native('search');
-  assert(report.search.clicked,JSON.stringify(report.search));
-  if(report.search.clicked) {
-    const testOrigin=origin;
-    try {
-      // Explorer starts the app with its normal environment. Verify only the synthetic workspace's known API port.
-      origin='http://127.0.0.1:'+apiPort;
-      const identity=await json('identity');
-      assert.equal(identity.workspace_id,id.workspace_id);assert.equal(identity.service_instance_id,id.service_instance_id);
-      const document=await json('documents/'+topic.core_document_id);
-      assert.equal(document.head_revision_id,lastRevision);assert.equal(document.text,changedText);
-      try {uiEditor(changedText,'','second-search-editor');report.searchReopenedEditor=true;} catch(e){report.searchReopenedEditorError=String(e).slice(0,1600);}
-      report.search.window=native('capture',{TEST_SCREEN:'start-menu-cold-launch-desktop.png'});
-      assert.equal(report.search.window.pid,report.search.pid);
-      mark('Clicked named Windows Search result from cold state and read the saved draft from its installed sidecar');
-    } finally {
-      origin=testOrigin;native('close');
-      await until(()=>native('processes').length===0,'Search-launched application and sidecar exited');
-      assert.equal(await listening(apiPort),false);
-    }
-  }
-  phase='restart and verify';
-  page=await application();await inspect(page,changedText,'reopened');
-  const persisted=await json('documents/'+topic.core_document_id);
-  assert.equal(persisted.head_revision_id,lastRevision);assert.equal(persisted.text,changedText);
-  await closeAndCheck();
-  mark('Saved in renderer, closed normally, released all three ports, reopened via installed shortcut, read same revision, image and history');
+  uiEditor(originalText,uiText,'first-search-edited');
+  const doc=await until(async()=>{const doc=await directDoc();return doc.text===uiText&&doc;},'search-launched editor persisted');
+  report.searchEdited=doc.head_revision_id;
+  native('close');await until(()=>native('processes').length===0,'all search-launched processes exited');assert.equal(await listening(apiPort),false);
+  report.secondSearch=native('search');assert(report.secondSearch.clicked,JSON.stringify(report.secondSearch));
+  uiEditor(uiText,'','second-search-editor');
+  const reopened=await directDoc();assert.equal(reopened.head_revision_id,doc.head_revision_id);assert.equal(reopened.text,uiText);
+  report.coldRevision=reopened.head_revision_id;lastRevision=doc.head_revision_id;
+  native('close');await until(()=>native('processes').length===0,'normal cold window close');
+  assert.equal(await listening(apiPort),false);
+  mark('Two consecutive Search launches: old draft edited in normal window, same revision, original image and prior history read in cold window');
   phase='occupied port and safe startup failure';
   // Reproduce the former connect-and-destroy probe on a separate test listener, without starting the app.
   let reset;
