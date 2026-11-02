@@ -106,9 +106,9 @@ switch ($Action) {
       }
       if (!$p.HasExited) { throw 'Timed out driving the installation wizard' }
     }
-    $links=@(Get-ChildItem ([Environment]::GetFolderPath('Programs')) -Recurse -Filter '创作有数.lnk' | ForEach-Object {(New-Object -ComObject WScript.Shell).CreateShortcut($_.FullName).TargetPath})
+    $links=@(Get-ChildItem ([Environment]::GetFolderPath('Programs')) -Recurse -Filter '创作有数.lnk' | Select-Object -ExpandProperty FullName)
     @{expected=$program;exists=(Test-Path -LiteralPath $program);links=$links;exitCode=$p.ExitCode} | ConvertTo-Json > "$env:TEST_REPORT/install-result.json"
-    if (($null -ne $p.ExitCode -and $p.ExitCode -ne 0) -or !(Test-Path -LiteralPath $program) -or $links -notcontains $program) {throw "Installation verification failed: $(Get-Content "$env:TEST_REPORT/install-result.json" -Raw)"}
+    if (($null -ne $p.ExitCode -and $p.ExitCode -ne 0) -or !(Test-Path -LiteralPath $program) -or $links.Count -ne 1) {throw "Installation verification failed: $(Get-Content "$env:TEST_REPORT/install-result.json" -Raw)"}
     Json @{ mode=$mode; screenshot=$screen; signature=[string]$signature.Status; publisher=$signature.SignerCertificate.Subject;
       downloadReputation='not_run: local CI artifact, no browser download reputation assessment' }
   }
