@@ -1,0 +1,60 @@
+name: Windows desktop QA environment probe
+on:
+  push:
+    branches: [codex/qa-windows-desktop-preflight-r1]
+permissions: {}
+jobs:
+  desktop:
+    runs-on: windows-2025
+    timeout-minutes: 5
+    steps:
+      - name: Probe disposable desktop only
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          $sid=(Get-Process -Id $PID).SessionId
+          Get-CimInstance Win32_OperatingSystem | Select Caption,BuildNumber,OSArchitecture | Format-List
+          "session=$sid interactive=$([Environment]::UserInteractive)"
+          $shell=Get-Process explorer -ErrorAction SilentlyContinue | Where-Object SessionId -eq $sid
+          "same_session_explorer=$([bool]$shell)"
+          Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+          Add-Type -TypeDefinition @'
+          using System;
+          using System.Runtime.InteropServices;
+          public static class Input {
+            [DllImport("user32.dll")] public static extern void keybd_event(byte k,byte s,uint f,UIntPtr e);
+            [DllImport("user32.dll")] public static extern bool SetCursorPos(int x,int y);
+            [DllImport("user32.dll")] public static extern void mouse_event(uint f,uint x,uint y,uint d,UIntPtr e);
+          }
+          '@
+          function snap($name) {
+            $b=[Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $img=New-Object Drawing.Bitmap $b.Width,$b.Height
+            $g=[Drawing.Graphics]::FromImage($img)
+            try {$g.CopyFromScreen($b.Location,[Drawing.Point]::Empty,$b.Size);$img.Save("$env:RUNNER_TEMP/$name.png")} finally {$g.Dispose();$img.Dispose()}
+          }
+          snap 'desk-before'
+          if (!$shell -or !$sid) {throw 'No same-session interactive Explorer'}
+          [Input]::keybd_event(0x5B,0,0,0); [Input]::keybd_event(0x5B,0,2,0)
+          Start-Sleep -Seconds 2
+          (New-Object -ComObject WScript.Shell).SendKeys('notepad')
+          Start-Sleep -Seconds 3
+          snap 'desk-search'
+          Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
+          $root=[Windows.Automation.AutomationElement]::RootElement
+          $cond=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),'Notepad'
+          $hits=$root.FindAll([Windows.Automation.TreeScope]::Descendants,$cond)
+          $hit=$hits | Where-Object {-not $_.Current.IsOffscreen -and $_.Current.BoundingRectangle.Width -gt 2} | Select-Object -First 1
+          if (!$hit) {throw 'No visible Notepad result'}
+          $r=$hit.Current.BoundingRectangle
+          if (![Input]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))) {throw 'cursor failed'}
+          [Input]::mouse_event(2,0,0,0,0); [Input]::mouse_event(4,0,0,0,0)
+          Start-Sleep -Seconds 3
+          Get-Process notepad -ErrorAction Stop | Select SessionId,MainWindowTitle
+          snap 'desk-click'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-environment
+          path: ${{ runner.temp }}/desk-*.png
+          retention-days: 3
