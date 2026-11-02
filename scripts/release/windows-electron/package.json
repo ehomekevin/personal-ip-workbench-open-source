@@ -1,0 +1,8 @@
+{
+  "name": "chuangzuoyoushu",
+  "productName": "创作有数",
+  "version": "0.1.2",
+  "main": "main.cjs",
+  "private": true,
+  "license": "MIT"
+}
