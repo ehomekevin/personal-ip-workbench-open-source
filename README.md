@@ -28,7 +28,7 @@ AI 生成内容先作为候选，由你决定是否采用。核心稿和平台�
 
 ## 安装发行版与接收更新
 
-从 [GitHub Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 下载稳定版源码包及 `SHA256SUMS`，按[安装与升级指南](GETTING_STARTED.md)校验、安装并创建独立工作区。下方的 Git 命令适用于从仓库体验源码。
+从 [GitHub Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 选择 Windows x64 便携 ZIP 或源码包，并下载 `SHA256SUMS`。Windows 用户校验并解压后双击 `Start.cmd` 即可打开本地工作台。安装、数据目录和升级步骤见[安装与升级指南](GETTING_STARTED.md)。下方的 Git 命令适用于从仓库体验源码。
 
 网页工作台使用构建时根 `package.json` 的版本，向本仓库查询最新稳定 Release。有更新时会显示版本和发布说明，你可以继续编辑、关闭提醒，或按指南手动升级。检查结果缓存在本机浏览器，离线或 GitHub 限流时仍可照常使用。查询无需登录，不发送工作区身份、稿件或用量统计。
 

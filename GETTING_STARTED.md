@@ -2,6 +2,21 @@
 
 面向个人创作者的本地工作台，提供选题、核心稿、多平台版本、配图、排期和复盘界面。前端使用 React，本地服务使用 Node.js 和 SQLite；MCP 插件连接同一套本地服务。
 
+## Windows x64 便携版
+
+从[项目 Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases)下载 `personal-ip-workbench-0.1.0-windows-x64.zip` 和 `SHA256SUMS`。在下载目录打开 PowerShell，核对 ZIP 的 SHA-256 与清单中同名文件的一行一致。
+
+```powershell
+Get-FileHash -Algorithm SHA256 .\personal-ip-workbench-0.1.0-windows-x64.zip
+Get-Content .\SHA256SUMS | Select-String 'windows-x64.zip'
+```
+
+将 ZIP **全部解压**到新的程序目录，双击 `Start.cmd`。它使用随包提供的 Node.js x64 和已构建的网页、服务，在本机启动工作台。默认网页地址为 `http://127.0.0.1:5180/`。保留启动窗口，退出时运行同一程序目录的 `Stop.cmd`。如果端口占用，先查看启动窗口的提示。可以在 PowerShell 中设置 `$env:WORKBENCH_WEB_PORT='5280'` 后运行 `.\Start.cmd`。首次创建工作区时可用 `$env:WORKBENCH_API_PORT='4328'` 选择 API 端口，已有工作区使用其 `config.json` 中的 `listen.port`。
+
+工作区默认在 `%LOCALAPPDATA%\PersonalIPWorkbench`，程序与用户数据分别存放。停服后备份整个工作区，包含配置、SQLite 数据库及其侧文件、笔记和素材。若另行配置了外部资料或媒体路径，另行备份那些目录。可使用环境变量 `WORKBENCH_DATA_DIR` 指定独立的绝对目录，之后启动和停止均使用同一设置。
+
+升级时先停旧版并备份数据，把新 ZIP 解压到另一个程序目录，再双击新版 `Start.cmd`，继续使用原工作区。需要回退时关闭新版，另存升级后工作区，在原数据路径恢复升级前备份，再从保留的旧程序目录启动。切换程序目录时不要删除工作区。基础编辑和保存可在空配置下使用，模型和发布账号在设置中按需连接。
+
 ## 安装稳定版源码包
 
 准备 Node.js **26.9.0**、pnpm **10.32.1** 和可用的网络。源码包包含工作台、插件源文件、依赖锁文件和许可证；首次安装时 pnpm 下载依赖，模型、账号和第三方凭据由使用者自行配置。以下命令适用于 macOS 或 Linux 的终端。
@@ -11,7 +26,8 @@
 ```sh
 node --version
 pnpm --version
-shasum -a 256 -c SHA256SUMS   # Linux：sha256sum -c SHA256SUMS
+grep '  personal-ip-workbench-0.1.0.tar.gz$' SHA256SUMS | shasum -a 256 -c -
+# Linux 可将 shasum -a 256 -c - 换成 sha256sum -c -
 ```
 
 校验输出须包含 `personal-ip-workbench-0.1.0.tar.gz: OK`。将不同版本的程序分别解压，工作区另存到版本目录外。以下命令在刚才的下载目录执行：
