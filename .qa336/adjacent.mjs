@@ -37,10 +37,10 @@ try {
  report[tag]={calls,text:await page.locator('.release-notice').allTextContents()};await page.unrouteAll({behavior:'wait'});
  }
  record('notices');const click=page.getByText('查看更新说明').click({noWaitAfter:true,timeout:8000}).catch(e=>{report.clickError=String(e)});await sleep(900);
- const result=ps(`Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes,System.Windows.Forms; $ui=[Windows.Automation.AutomationElement]; $root=$ui::RootElement;$p=@(Get-Process Chuangzuoyoushu | Where-Object MainWindowHandle -ne 0); $ws=$root.FindAll([Windows.Automation.TreeScope]::Children,[Windows.Automation.Condition]::TrueCondition);foreach($w in $ws){if($w.Current.ProcessId -notin $p.Id){continue}; $nodes=$w.FindAll([Windows.Automation.TreeScope]::Descendants,[Windows.Automation.Condition]::TrueCondition);if (($nodes|ForEach-Object {$_.Current.Name}) -contains '在浏览器打开外部链接？') { $button=$nodes|Where-Object {$_.Current.Name -eq '打开' -and $_.Current.ControlType.ProgrammaticName -eq 'ControlType.Button'}|Select-Object -First 1;if($button){$button.GetCurrentPattern([Windows.Automation.InvokePattern]::Pattern).Invoke();'confirmed'}}}`);
+ const result=execFileSync('pwsh',['-STA','-NoProfile','-File',join(import.meta.dirname,'confirm-link.ps1')],{env,encoding:'utf8',timeout:25000}).trim();
  await click;assert.equal(result,'confirmed');report.openedExternal=result;
  await sleep(1500);assert.equal(new URL(page.url()).origin,origin);
- report.pass=true;
+ report.browserHandoff=ps("Get-CimInstance Win32_Process | Where-Object { $_.Name -in @('msedge.exe','chrome.exe','firefox.exe') -and $_.CommandLine -like '*ehomekevin/personal-ip-workbench-open-source/releases/tag/v0.1.3*' } | Select-Object -ExpandProperty Name");report.pass=true;
 } catch(e){report.failure=String(e);record('failed_at_'+report.phase);process.exitCode=1;}finally{
  try{if(existsSync(program)){if(native('processes').length){native('close');await sleep(2500)};if(browser)await browser.close();native('uninstall');report.remaining=native('processes');}}catch(e){report.cleanupError=String(e)}
  clearTimeout(watchdog);writeFileSync(join(out,'adjacent.json'),JSON.stringify(report,null,2));console.log(report);process.exit(process.exitCode||0);
