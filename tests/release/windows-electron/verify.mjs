@@ -21,8 +21,8 @@ assert.equal(oldHash, 'a1b9c48a2ea48496be3ede3ebae4e6c839d2124a93a202cec4f66947f
 mkdirSync(output, { recursive: true });
 const tmp = mkdtempSync(join(tmpdir(), 'desktop-check-'));
 const legacy = join(tmp, 'old');
-const install = join(tmp, '创作有数 app');
-const localData = join(tmp, '用户数据');
+const localData = process.env.LOCALAPPDATA;
+const install = join(localData, 'Programs', 'Chuangzuoyoushu');
 const dataDir = join(localData, 'PersonalIPWorkbench');
 const idFile = join(dataDir, 'config.json');
 const passed = [];
@@ -55,7 +55,7 @@ env = { ...process.env, LOCALAPPDATA:localData, WORKBENCH_API_PORT:String(apiPor
   WORKBENCH_NO_BROWSER:'1', TEST_SETUP:installer, TEST_INSTALL:install, TEST_REPORT:output, TEST_CDP:String(debug) };
 delete env.WORKBENCH_DATA_DIR;
 delete env.NODE_OPTIONS;
-mkdirSync(localData);
+assert(!existsSync(install) && !existsSync(dataDir), 'Disposable account must have no existing installation or user workspace');
 const native = (action, extra={}) => JSON.parse(execFileSync('pwsh',['-STA','-NoLogo','-NoProfile','-NonInteractive','-File',
   join(import.meta.dirname,'native.ps1'),action],{env:{...env,...extra},encoding:'utf8',timeout:150_000}).trim());
 async function req(path, body) {

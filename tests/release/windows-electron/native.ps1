@@ -86,12 +86,11 @@ switch ($Action) {
       downloadReputation='not_run: local CI artifact, no browser download reputation assessment' }
   }
   'shortcut' {
-    $links = @(Get-ChildItem -LiteralPath ([Environment]::GetFolderPath('Programs')) -Recurse -Filter '创作有数.lnk' | Where-Object {
-      (New-Object -ComObject WScript.Shell).CreateShortcut($_.FullName).TargetPath -eq $program
-    })
-    if ($links.Count -ne 1) { throw 'Expected one Start Menu shortcut for the installed application' }
+    $programs = [Environment]::GetFolderPath('Programs')
+    $links = @(Get-ChildItem -LiteralPath $programs -Recurse -Filter '创作有数.lnk')
+    if ($links.Count -ne 1) { throw "Expected one installed shortcut in '$programs'; found $($links.Count)" }
     $lnk = (New-Object -ComObject WScript.Shell).CreateShortcut($links[0].FullName)
-    Json @{ link=$links[0].FullName; target=$lnk.TargetPath; icon=$lnk.IconLocation }
+    Json @{ link=$links[0].FullName; target=[Environment]::ExpandEnvironmentVariables($lnk.TargetPath); icon=$lnk.IconLocation }
   }
   'launch' { Start-Process -FilePath $env:TEST_LINK -ArgumentList "--remote-debugging-port=$env:TEST_CDP"; Json 'started' }
   'processes' {
