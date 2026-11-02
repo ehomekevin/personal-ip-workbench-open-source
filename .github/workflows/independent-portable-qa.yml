@@ -1,7 +1,7 @@
-name: Independent final ZIP acceptance
+name: Independent Windows 0.1.1 acceptance
 on:
   push:
-    branches: [codex/qa-release-792-windows-r1]
+    branches: [codex/qa-release-3f85-windows-r1]
     paths: ['.qa-release/**', '.github/workflows/independent-portable-qa.yml']
 permissions:
   contents: read
@@ -18,13 +18,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh run download 41375195267 --repo ehomekevin/personal-ip-workbench-open-source --name windows-portable-41375195267-1 --dir "$env:RUNNER_TEMP/input"
+          gh run download 41386669459 --repo ehomekevin/personal-ip-workbench-open-source --name windows-portable-41386669459-1 --dir "$env:RUNNER_TEMP/input"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $zip = Get-Item "$env:RUNNER_TEMP/input/personal-ip-workbench-0.1.0-windows-x64.zip"
-          if ($zip.Length -ne 41047496 -or (Get-FileHash $zip).Hash -ne 'cb17c7678f3bd5cac4ffd245991b269d7d1f8e7887630868232c952bc0dabc02') { throw 'ZIP identity mismatch' }
+          $zip = Get-Item "$env:RUNNER_TEMP/input/chuangzuoyoushu-0.1.1-windows-x64.zip"
+          if ($zip.Length -ne 41028154 -or (Get-FileHash $zip).Hash -ne 'a1b9c48a2ea48496be3ede3ebae4e6c839d2124a93a202cec4f66947f74822cb') { throw 'ZIP identity mismatch' }
           $root = Join-Path $env:RUNNER_TEMP 'native-review'
           New-Item -Type Directory -Path "$root/evidence" -Force | Out-Null
           foreach ($directory in @('程序 A','程序 B')) { Expand-Archive -LiteralPath $zip.FullName -DestinationPath (Join-Path $root $directory) }
+          $old = Join-Path $env:RUNNER_TEMP 'published-0.1.0.zip'
+          curl.exe -q --fail -LsS 'https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/personal-ip-workbench-0.1.0-windows-x64.zip' -o $old
+          if ($LASTEXITCODE -ne 0 -or (Get-FileHash $old).Hash -ne 'cb17c7678f3bd5cac4ffd245991b269d7d1f8e7887630868232c952bc0dabc02') { throw 'Published 0.1.0 ZIP identity mismatch' }
+          Expand-Archive -LiteralPath $old -DestinationPath (Join-Path $root '已发布旧版')
       - name: Install browser driver for the QA runner
         run: npm install --prefix "$env:RUNNER_TEMP/driver" --ignore-scripts --no-audit --no-fund playwright-core@1.63.0
       - name: Exercise extracted package
