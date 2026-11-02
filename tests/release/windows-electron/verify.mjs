@@ -171,11 +171,12 @@ try {
   let page=await application();
   await page.bringToFront();
   const firstTree=native('processes');
-  const main=firstTree.filter(p=>p.main),sidecar=firstTree.filter(p=>p.name.toLowerCase()==='node.exe');
-  assert.equal(main.length,1);assert.equal(sidecar.length,1);assert.equal(sidecar[0].parent,main[0].id);
+  const main=firstTree.filter(p=>p.main); assert.equal(main.length,1,'single native main process');
+  const ownedService=p=>p.name.toLowerCase()==='node.exe' && p.parent===main[0].id;
+  const sidecar=firstTree.filter(ownedService);assert.equal(sidecar.length,1,'one directly owned service (excluding its workers)');
   native('launch');await delay(1800);
   const same=native('processes');
-  assert.deepEqual(same.filter(p=>p.main),main);assert.deepEqual(same.filter(p=>p.name.toLowerCase()==='node.exe'),sidecar);
+  assert.deepEqual(same.filter(p=>p.main),main);assert.deepEqual(same.filter(ownedService),sidecar);
   assert.equal(browser.contexts()[0].pages().length,1);
   mark('Second installed shortcut launch kept one native window and one owned sidecar');
   phase='open old draft, image and history inside installed window';
@@ -234,6 +235,10 @@ try {
   report.status='passed';
 } catch (e) {
   report.status='failed';report.phase=phase;report.failure=e.message.slice(0,1200);
+  if (browser?.isConnected()) {
+    const page=browser.contexts()[0]?.pages().find(p=>p.url().startsWith(origin+'/'));
+    await page?.screenshot({path:join(output,'failed-window.png'),timeout:4000}).catch(()=>{});
+  }
   console.error(phase,e);process.exitCode=1;
 } finally {
   writeFileSync(join(output,'verification.json'),JSON.stringify(report,null,2)+'\n');
