@@ -1,0 +1,39 @@
+name: Independent final ZIP acceptance
+on:
+  push:
+    branches: [codex/qa-release-792-windows-r1]
+    paths: ['.qa-release/**', '.github/workflows/independent-portable-qa.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Retrieve original distribution archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 41375195267 --repo ehomekevin/personal-ip-workbench-open-source --name windows-portable-41375195267-1 --dir "$env:RUNNER_TEMP/input"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $zip = Get-Item "$env:RUNNER_TEMP/input/personal-ip-workbench-0.1.0-windows-x64.zip"
+          if ($zip.Length -ne 41047496 -or (Get-FileHash $zip).Hash -ne 'cb17c7678f3bd5cac4ffd245991b269d7d1f8e7887630868232c952bc0dabc02') { throw 'ZIP identity mismatch' }
+          $root = Join-Path $env:RUNNER_TEMP 'native-review'
+          New-Item -Type Directory -Path "$root/evidence" -Force | Out-Null
+          foreach ($directory in @('程序 A','程序 B')) { Expand-Archive -LiteralPath $zip.FullName -DestinationPath (Join-Path $root $directory) }
+      - name: Install browser driver for the QA runner
+        run: npm install --prefix "$env:RUNNER_TEMP/driver" --ignore-scripts --no-audit --no-fund playwright-core@1.63.0
+      - name: Exercise extracted package
+        run: node .qa-release/native.cjs
+      - name: Collect independent evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: independent-windows-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/native-review/evidence
+          if-no-files-found: error
+          retention-days: 14
