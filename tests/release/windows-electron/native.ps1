@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][ValidateSet('install','shortcut','launch','close','capture','search','processes','errorbox','uninstall')] [string]$Action)
+param([Parameter(Mandatory)][ValidateSet('install','shortcut','launch','close','capture','search','processes','listener','errorbox','uninstall')] [string]$Action)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing, UIAutomationClient, UIAutomationTypes
 Add-Type @'
@@ -95,6 +95,12 @@ switch ($Action) {
     Json @{ link=$links[0].FullName; target=$item.ExtendedProperty('System.Link.TargetParsingPath') }
   }
   'launch' { Start-Process -FilePath $env:TEST_LINK -ArgumentList "--remote-debugging-port=$env:TEST_CDP"; Json 'started' }
+  'listener' {
+    $row = @(Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort ([int]$env:WORKBENCH_WEB_PORT) -State Listen)
+    if ($row.Count -ne 1) { throw 'Expected one listening owner' }
+    $owner = Get-Process -Id $row[0].OwningProcess
+    Json @{ pid=$owner.Id; executable=$owner.Path; started=$owner.StartTime.ToUniversalTime().ToString('o'); port=$row[0].LocalPort }
+  }
   'processes' {
     $names = @($program,(Join-Path $env:TEST_INSTALL 'resources/core/runtime/node.exe'))
     $rows = @(Get-CimInstance Win32_Process -Filter "Name='Chuangzuoyoushu.exe' OR Name='node.exe'" | Where-Object {

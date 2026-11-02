@@ -216,20 +216,51 @@ try {
   await closeAndCheck();
   mark('Saved in renderer, closed normally, released all three ports, reopened via installed shortcut, read same revision, image and history');
   phase='occupied port and safe startup failure';
-  const sentinel=createServer(socket=>{socket.on('error',()=>socket.destroy());socket.end('owned by the test');});
-  await new Promise((ok,fail)=>sentinel.once('error',fail).listen(web,'127.0.0.1',ok));
+  // Reproduce the former connect-and-destroy probe on a separate test listener, without starting the app.
+  let reset;
+  const reproduction = createServer(socket => {
+    socket.once('error', error => {
+      if (error.code !== 'ECONNRESET' || error.syscall !== 'read') throw error;
+      reset = {pid:process.pid, port:reproduction.address().port, code:error.code, syscall:error.syscall, stack:error.stack};
+    });
+    socket.end('owned by the test');
+  });
+  await new Promise((ok,fail)=>reproduction.once('error',fail).listen(0,'127.0.0.1',ok));
   try {
-    native('launch');
-    report.occupiedPort=native('errorbox');
-    await until(()=>native('processes').length===0,'failed launch cleaned up its own processes');
-    const marker=await new Promise((ok,fail)=>{
+    for (let attempt=0; attempt<20 && !reset; attempt++) {
+      assert(await listening(reproduction.address().port));
+      await delay(50);
+    }
+    assert(reset,'Expected the old Windows probe to reproduce its server-side reset');
+    report.oldProbeReset=reset;
+  } finally { await new Promise(done=>reproduction.close(done)); }
+
+  const identityMarker=randomUUID();
+  const sentinel=createServer(socket=>socket.end(identityMarker));
+  await new Promise((ok,fail)=>sentinel.once('error',fail).listen(web,'127.0.0.1',ok));
+  async function readOwner() {
+    const owner=native('listener');
+    assert.equal(owner.pid,process.pid);
+    assert.equal(owner.port,web);
+    const response=await new Promise((ok,fail)=>{
       const socket=connect(web,'127.0.0.1');let text='';socket.setEncoding('utf8');
       socket.on('data',part=>text+=part).once('end',()=>ok(text)).once('error',fail);
       socket.setTimeout(3000,()=>socket.destroy(Error('Port owner did not respond')));
     });
-    assert.equal(marker,'owned by the test');assert.equal(await listening(apiPort),false);
+    assert.equal(response,identityMarker);
+    return {...owner,response};
+  }
+  try {
+    const before=await readOwner();
+    native('launch');
+    report.occupiedPort=native('errorbox');
+    await until(()=>native('processes').length===0,'failed launch cleaned up its own processes');
+    const after=await readOwner();
+    assert.deepEqual(after,before);
+    report.occupiedPort.owners={before,after};
+    assert.equal(await listening(apiPort),false);
     assert.equal(await listening(debug),false);
-    mark('Occupied port showed actionable native error and left the other listener running');
+    mark('Occupied port showed actionable native error and preserved the same listener PID, start time, executable and response');
   } finally {await new Promise(done=>sentinel.close(done));}
   phase='uninstall data retention';
   native('uninstall');
