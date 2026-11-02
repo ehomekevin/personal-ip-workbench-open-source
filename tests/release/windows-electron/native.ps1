@@ -178,6 +178,25 @@ switch ($Action) {
           if ($rect) { break }
         }
       } until ($rect -or (Get-Date) -gt $deadline)
+      if (!$rect -and (ShellForeground)) {
+        # SearchHost on Server 2025 can draw an app result without exposing its UIA children.
+        # Fingerprint covers the visible branded icon AND Chinese name of the Best match from two CI desktops.
+        $file=Join-Path $env:TEST_REPORT 'start-menu-search.png'
+        DesktopCapture $file
+        $bmp=[Drawing.Bitmap]::new($file)
+        try {
+          if ($bmp.Width -eq 1024 -and $bmp.Height -eq 768) {
+            $pixels=[Collections.Generic.List[byte]]::new()
+            for ($y=158;$y -lt 195;$y++) { for ($x=161;$x -lt 253;$x++) {
+              $c=$bmp.GetPixel($x,$y); $pixels.Add([byte]($c.R -lt 150 -and $c.G -lt 150 -and $c.B -lt 150))
+            } }
+            $digest=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($pixels.ToArray()))
+            if ($digest -eq '9157027d9b0a8145fc33830941f672af6c9f3013e3a063fe3a201facb6bd28f2') {
+              $pt=[Windows.Point]::new(216,173); $rect=$true; $matched='创作有数 (verified Best match icon and label)'
+            }
+          }
+        } finally { $bmp.Dispose() }
+      }
       if (!$rect -or !(ShellForeground)) { throw 'App result absent or not safely clickable in the foreground search UI' }
       $screen=TryCapture (Join-Path $env:TEST_REPORT 'start-menu-search.png')
       if (![WindowTest]::SetCursorPos([int]$pt.X,[int]$pt.Y)) { throw 'Cannot point to verified app search result' }
@@ -209,8 +228,10 @@ switch ($Action) {
           $texts = $window.FindAll($all,(Equal $ui::ControlTypeProperty ([System.Windows.Automation.ControlType]::Text)))
           if (!(@($texts | ForEach-Object { $_.Current.Name }) -match '端口已被占用')) { continue }
           $screen = TryCapture (Join-Path $env:TEST_REPORT 'occupied-port-desktop.png')
-          $ok = $window.FindFirst($all,(Equal $ui::ControlTypeProperty ([System.Windows.Automation.ControlType]::Button)))
-          $ok.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+          $dialog=[IntPtr]$window.Current.NativeWindowHandle
+          [void][WindowTest]::SetForegroundWindow($dialog)
+          if ([WindowTest]::GetForegroundWindow() -ne $dialog) { throw 'Cannot focus owned error dialog' }
+          [Windows.Forms.SendKeys]::SendWait('{ENTER}')
           Json @{ dialog='occupied-port'; screenshot=$screen }; return
         }
       }
