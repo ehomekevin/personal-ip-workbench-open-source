@@ -23,7 +23,7 @@ try {
  report.licenseMedia=ps('Get-ChildItem $env:TEST_INSTALL,*invalid -ErrorAction SilentlyContinue | Where-Object Name -match "LICENSE" | Select-Object -ExpandProperty Name; Get-ChildItem $env:TEST_INSTALL/resources/core/licenses | Select-Object -ExpandProperty Name');
  record('launch');env.TEST_LINK=native('shortcut').link;native('launch');
  for(let i=0;i<60&&!browser;i++){try{browser=await chromium.connectOverCDP('http://127.0.0.1:47233',{timeout:1500})}catch{await sleep(400)}}
- record('connected');const page=browser.contexts()[0].pages()[0];page.setDefaultTimeout(8000);
+ record('connected');let page;for(let i=0;i<60&&!page;i++){page=browser.contexts()[0]?.pages().find(p=>p.url().startsWith('http://127.0.0.1:47232/'));if(!page)await sleep(400)}assert(page,'No ready workbench page');page.setDefaultTimeout(8000);
  await expect(page).toHaveTitle('创作有数');
  const origin=new URL(page.url()).origin;assert.equal(origin,'http://127.0.0.1:47232');
  assert.deepEqual(await page.evaluate(()=>[typeof require,typeof process,typeof electron,typeof ipcRenderer]),Array(4).fill('undefined'));
