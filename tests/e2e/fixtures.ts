@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { ServiceIdentity } from '../../packages/contracts/src/index.ts';
 
 export { expect };
+export const latestReleaseUrl = 'https://api.github.com/repos/ehomekevin/personal-ip-workbench-open-source/releases/latest';
 export const test = base.extend<{ browserErrors: string[] }>({
   browserErrors: [async ({ page, baseURL }, use, testInfo) => {
     const errors: string[] = [];
@@ -13,7 +14,9 @@ export const test = base.extend<{ browserErrors: string[] }>({
       if (backend.protocol !== 'http:' || backend.hostname !== '127.0.0.1') throw new Error('隔离后端必须为本机 HTTP');
       allowedOrigins.add(backend.origin);
     }
-    page.on('request', request => { if (/^https?:/.test(request.url()) && !allowedOrigins.has(new URL(request.url()).origin)) errors.push('浏览器请求超出隔离服务：' + request.url()); });
+    // Answer only the public release lookup locally. All other external requests remain test failures.
+    await page.route(latestReleaseUrl, route => route.fulfill({status:404, json:{message:'Not Found'}}));
+    page.on('request', request => { if (request.url() === latestReleaseUrl && request.method() === 'GET') return; if (/^https?:/.test(request.url()) && !allowedOrigins.has(new URL(request.url()).origin)) errors.push('浏览器请求超出隔离服务：' + request.url()); });
     await page.context().addInitScript(() => { Date.now = () => 1791577200000; Math.random = () => 0.123456789; });
     await use(errors);
     if (errors.length) await testInfo.attach('browser-errors', { body: JSON.stringify(errors), contentType: 'application/json' });

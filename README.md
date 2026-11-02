@@ -26,6 +26,12 @@ Personal IP Workbench 是面向个人创作者的本地工作台。把收集的�
 
 AI 生成内容先作为候选，由你决定是否采用。核心稿和平台稿分别保存，修改一个平台的文字不会替换其他平台的稿件。
 
+## 安装发行版与接收更新
+
+从 [GitHub Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 下载稳定版源码包及 `SHA256SUMS`，按[安装与升级指南](GETTING_STARTED.md)校验、安装并创建独立工作区。下方的 Git 命令适用于从仓库体验源码。
+
+网页工作台使用构建时根 `package.json` 的版本，向本仓库查询最新稳定 Release。有更新时会显示版本和发布说明，你可以继续编辑、关闭提醒，或按指南手动升级。检查结果缓存在本机浏览器，离线或 GitHub 限流时仍可照常使用。查询无需登录，不发送工作区身份、稿件或用量统计。
+
 ## 快速体验
 
 使用 Node.js 26.9.0 和 pnpm 10.32.1：
