@@ -1,5 +1,7 @@
 # 创作者工作台 · Personal IP Workbench
 
+给自己运营账号的创作者用的本地工作台。可以从一份资料起稿，分别维护公众号、小红书、X、抖音和 B 站版本，再按平台排期、记录反馈，把读者的问题带回下一篇。
+
 一段会议录音，准备写成一篇公众号文章，再拆成一条小红书笔记。两篇稿子用的是同一个例子，开头、配图和发布时间却各不相同。创作者工作台让你在一个主题里保留原始资料、自己的判断和各个平台的稿子。下次打开，就能接着改上次那一稿。
 
 [个人站中文上手说明](https://ai.flowo.design/products/creator-workbench/) · [安装与升级指南](GETTING_STARTED.md) · [查看发行版本](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases)
