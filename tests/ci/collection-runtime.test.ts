@@ -48,7 +48,7 @@ test('账号核对真实SQLite幂等落库；未知/冲突/模拟身份不能升
 
 test('本人公众号认证按AppID幂等落库，保存专属依据，不产生发布权限与发布计划', async () => {
   const f = fixture(); try {
-    const url = 'https://mp.weixin.qq.com/s/owner-fixture', appId = 'wx752f1342cf386376'; let calls = 0;
+    const url = 'https://mp.weixin.qq.com/s/owner-fixture', appId = 'wx' + '0'.repeat(16); let calls = 0;
     f.db.prepare("UPDATE accounts SET platform='wechat',canonical_url=? WHERE id='owner'").run(url);
     const checks = new AccountChecks(f.context, { resolveAccount: async () => { throw new Error('must_not_call_tikhub'); } }, {
       resolveAccount: async (id, inputUrl) => { calls++; assert.equal(id, 'owner'); assert.equal(inputUrl, url); return { platform: 'wechat', platform_account_id: appId, canonical_url: url, checked_at: '2026-10-12T12:00:00Z', raw_body: '{"authentication":"passed"}', evidence_kind: 'internal_rule' }; },

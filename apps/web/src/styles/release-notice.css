@@ -1,0 +1,3 @@
+.release-notice { display: flex; align-items: center; flex-wrap: wrap; gap: .35rem 1rem; padding: .55rem clamp(1rem, 3vw, 2.5rem); color: #172958; background: #edf3df; border-bottom: 1px solid #d6dfc4; font-size: .85rem; }
+.release-notice a { color: inherit; text-decoration: underline; text-underline-offset: .18em; }
+.release-notice button { margin-inline-start: auto; padding: .3rem .5rem; border: 0; background: transparent; color: inherit; cursor: pointer; }
