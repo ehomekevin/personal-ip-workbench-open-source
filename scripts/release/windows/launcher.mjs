@@ -62,7 +62,7 @@ async function start(dataDir, controlFile) {
   } catch (error) { if (control.listening) control.close(); await workbench.close(); throw error; }
   const stopOnSignal = () => { close().catch(error => { console.error(error.message); process.exitCode = 1; }); };
   process.once('SIGINT', stopOnSignal); process.once('SIGTERM', stopOnSignal);
-  console.log(`工作台已启动：${workbench.url}\n数据目录：${dataDir}\n退出请双击 Stop.cmd，或在本窗口按 Ctrl+C。`);
+  console.log(`创作有数已启动：${workbench.url}\n数据目录：${dataDir}\n退出请双击 退出创作有数.cmd，或在本窗口按 Ctrl+C。`);
   if (process.env.WORKBENCH_NO_BROWSER !== '1') {
     const open = spawn(join(process.env.SystemRoot, 'System32', 'rundll32.exe'), ['url.dll,FileProtocolHandler', workbench.url], { detached: true, stdio: 'ignore' });
     open.once('error', () => console.log(`请手动打开 ${workbench.url}`)); open.unref();
@@ -80,13 +80,13 @@ async function stop(controlFile) {
     socket.on('data', data => chunks.push(data)); socket.once('error', fail);
     socket.once('end', () => Buffer.concat(chunks).toString() === 'stopped\n' ? ok() : fail(new Error('工作台未确认正常退出')));
   });
-  console.log('工作台已正常退出。');
+  console.log('创作有数已正常退出。');
 }
 
 try {
   if (!workspace || !isAbsolute(workspace)) throw new Error('需要绝对路径 WORKBENCH_DATA_DIR 或本机 LOCALAPPDATA。');
   const action = process.argv[2];
-  if (action !== 'start' && action !== 'stop') throw new Error('请通过 Start.cmd 或 Stop.cmd 使用。');
+  if (action !== 'start' && action !== 'stop') throw new Error('请通过 创作有数.cmd 或 退出创作有数.cmd 使用。');
   const target = resolve(workspace);
   const physicalProgram = realpathSync.native(program);
   const requireOutsideProgram = path => {
