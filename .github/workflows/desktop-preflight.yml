@@ -40,18 +40,16 @@ jobs:
           (New-Object -ComObject WScript.Shell).SendKeys('notepad')
           Start-Sleep -Seconds 3
           snap 'desk-search'
-          Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
-          $root=[Windows.Automation.AutomationElement]::RootElement
-          $cond=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),'Notepad'
-          $hits=$root.FindAll([Windows.Automation.TreeScope]::Descendants,$cond)
-          $hit=$hits | Where-Object {-not $_.Current.IsOffscreen -and $_.Current.BoundingRectangle.Width -gt 2} | Select-Object -First 1
-          if (!$hit) {throw 'No visible Notepad result'}
-          $r=$hit.Current.BoundingRectangle
-          if (![Input]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))) {throw 'cursor failed'}
+          if ([Windows.Forms.Screen]::PrimaryScreen.Bounds.Width -ne 1024) {throw 'Reinspect search-result coordinates'}
+          if (![Input]::SetCursorPos(220,233)) {throw 'cursor failed'}
           [Input]::mouse_event(2,0,0,0,[UIntPtr]::Zero); [Input]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
           Start-Sleep -Seconds 3
           Get-Process notepad -ErrorAction Stop | Select SessionId,MainWindowTitle
           snap 'desk-click'
+          $keys=New-Object -ComObject WScript.Shell
+          $keys.SendKeys('QA fixture');$keys.SendKeys('%{F4}')
+          Start-Sleep -Seconds 1
+          snap 'desk-dialog'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
