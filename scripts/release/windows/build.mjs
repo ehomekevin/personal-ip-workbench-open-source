@@ -122,7 +122,7 @@ try {
   jsonFile(join(stage, 'release.json'), { version: manifest.version, commit: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'),
     platform: 'win32', arch: 'x64', nodeVersion, nodeUrl, nodeArchiveSha256, nodeExeSha256, thirdParty });
   const zip = join(scratch, fileName);
-  execFileSync('tar.exe', ['-a', '-cf', zip, '-C', stage, ...readdirSync(stage)]);
+  execFileSync('python', ['-m', 'zipfile', '-c', zip, ...readdirSync(stage)], { cwd: stage });
   mkdirSync(output, { recursive: true });
   copyFileSync(zip, finalZip, constants.COPYFILE_EXCL);
   console.log(`${sha(readFileSync(finalZip))}  ${fileName}`);
