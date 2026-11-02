@@ -41,9 +41,9 @@ try {
   $field.SetFocus()
   if ($SaveText) {
     [Windows.Forms.Clipboard]::SetText($SaveText)
-    [Windows.Forms.SendKeys]::SendWait('^a^v')
+    [Windows.Forms.SendKeys]::SendWait('^a');[Windows.Forms.SendKeys]::SendWait('^v')
     Start-Sleep -Seconds 1
-    if ($value.Current.Value -ne $SaveText) {throw 'Paste did not change visible editor'}
+    if ((WaitName '编辑核心稿').GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern).Current.Value -ne $SaveText) {throw 'Paste did not change visible editor'}
   }
   function Snap($name) {
   $b=[Windows.Forms.Screen]::PrimaryScreen.Bounds;$img=[Drawing.Bitmap]::new($b.Width,$b.Height);$g=[Drawing.Graphics]::FromImage($img)
