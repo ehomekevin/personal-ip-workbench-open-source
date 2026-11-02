@@ -111,14 +111,32 @@ async function identity() {
   return result;
 }
 
+const manualText = '手工核心稿：重启和更换程序目录后，应保留这一版正文。';
+
+async function api(id, path, body) {
+  const response = await fetch(origin + '/api/v1/' + path, {
+    method: body ? 'POST' : 'GET', signal: AbortSignal.timeout(5000),
+    headers: { 'X-Workspace-Id': id.workspace_id, 'X-Service-Instance-Id': id.service_instance_id,
+      'X-Request-Id': randomUUID(), ...(body ? { 'Idempotency-Key': randomUUID(), 'Content-Type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  assert.equal(response.status, body ? 201 : 200, 'local document API response');
+  return response.json();
+}
+
 async function readTopic(expectedIdentity) {
   const id = await identity();
   assert(id.workspace_id === expectedIdentity.workspace_id && id.service_instance_id === expectedIdentity.service_instance_id, 'workspace identity changed');
-  const response = await fetch(origin + '/api/v1/topics', { headers: {
-    'X-Workspace-Id': id.workspace_id, 'X-Service-Instance-Id': id.service_instance_id, 'X-Request-Id': randomUUID(),
-  }, signal: AbortSignal.timeout(3000) });
-  assert(response.ok);
-  assert((await response.json()).items.some(row => row.title === topicTitle), 'manually saved topic missing');
+  const topic = (await api(id, 'topics')).items.find(row => row.title === topicTitle);
+  assert(topic, 'manually saved topic missing');
+  return api(id, 'topics/' + topic.id);
+}
+
+async function checkRevision(id, original, revisionId) {
+  const topic = await readTopic(id);
+  assert.equal(topic.core_document_id, original.core_document_id);
+  assert.equal(topic.core.head_revision_id, revisionId);
+  assert.equal(topic.core.text, manualText);
 }
 
 try {
@@ -167,17 +185,23 @@ try {
   pass('Start.cmd, loopback web/API, bundled process, isolated default data');
   phase = 'browser';
   report.browser = await checkBrowser(origin, version, output);
-  await readTopic(first);
+  phase = 'manual revision';
+  const topic = await readTopic(first);
+  const saved = await api(first, 'documents/' + topic.core_document_id + '/revisions', {
+    expected_revision_id: topic.core.head_revision_id, text: manualText, origin: 'human',
+  });
+  assert(saved.revision_id, 'manual revision receipt missing');
+  await checkRevision(first, topic, saved.revision_id);
   report.screenshots = ['desktop-future.png', 'narrow-future.png'].map(name => ({ name, sha256: hash(join(output, name)), fixture: true }));
   pass('Real browser, manual save, update notices and network boundaries');
   phase = 'restart';
-  await stop(); await start(); await readTopic(first); await stop();
-  pass('Stop.cmd and restart preserve manual topic and identity');
+  await stop(); await start(); await checkRevision(first, topic, saved.revision_id); await stop();
+  pass('Stop.cmd and restart preserve workspace, core document, manual revision and text');
   phase = 'program-directory change';
   const next = join(tmp, '新版本 程序目录');
   renameSync(program, next); program = next;
-  await start(); await readTopic(first); await stop();
-  pass('Move extracted program and start from new path with persisted data');
+  await start(); await checkRevision(first, topic, saved.revision_id); await stop();
+  pass('Move extracted program and read the same manual revision and text');
   report.status = 'passed';
 } catch (error) {
   report.status = 'failed';

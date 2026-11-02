@@ -1,7 +1,7 @@
 import { createServer, createConnection } from 'node:net';
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from 'node:fs';
-import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, parse, relative, resolve, sep } from 'node:path';
 import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -13,6 +13,22 @@ function port(name, fallback) {
   const value = Number(process.env[name] ?? fallback);
   if (!Number.isSafeInteger(value) || value < 1 || value > 65535) throw new Error(`${name} 必须在 1–65535 之间`);
   return value;
+}
+
+function existingDirectoryAncestor(target) {
+  const root = parse(target).root;
+  if (target === root) throw new Error('数据目录必须使用专用文件夹。');
+  let ancestor = root;
+  for (const part of relative(root, target).split(sep)) {
+    const next = join(ancestor, part);
+    const entry = lstatSync(next, { throwIfNoEntry: false });
+    if (!entry) break;
+    // Windows 8.3 aliases are ordinary directories. Only a real link/junction is disallowed.
+    if (entry.isSymbolicLink()) throw new Error('数据目录不能经过符号链接或目录联接。');
+    if (!entry.isDirectory()) throw new Error('数据目录的已有路径必须是文件夹。');
+    ancestor = next;
+  }
+  return ancestor;
 }
 
 async function start(dataDir, controlFile) {
@@ -77,15 +93,13 @@ try {
     const rel = relative(physicalProgram, path);
     if (!isAbsolute(rel) && !/^\.\.(?:[\\/]|$)/.test(rel)) throw new Error('数据目录必须位于程序目录之外，方便升级和备份。');
   };
-  let ancestor = target;
-  while (!existsSync(ancestor) && dirname(ancestor) !== ancestor) ancestor = dirname(ancestor);
-  const physicalAncestor = realpathSync.native(ancestor);
-  if (relative(physicalAncestor, ancestor)) throw new Error('数据目录不能经过符号链接或目录联接。');
-  requireOutsideProgram(resolve(physicalAncestor, relative(ancestor, target)));
-  if (action === 'start') mkdirSync(target, { recursive: true });
+  const ancestor = existingDirectoryAncestor(target);
+  const physicalTarget = resolve(realpathSync.native(ancestor), relative(ancestor, target));
+  requireOutsideProgram(physicalTarget);
+  if (action === 'start') mkdirSync(physicalTarget, { recursive: true });
+  existingDirectoryAncestor(target);
   const dataDir = realpathSync.native(target);
   requireOutsideProgram(dataDir);
-  if (relative(dataDir, target)) throw new Error('数据目录不能经过符号链接或目录联接。');
   const controlFile = join(dataDir, '.portable-control');
   if (action === 'start') await start(dataDir, controlFile); else await stop(controlFile);
 } catch (error) {
