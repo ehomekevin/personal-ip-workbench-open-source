@@ -1,0 +1,44 @@
+name: Independent desktop 336 adjacent checks
+on:
+  push:
+    branches: [codex/qa-desktop-336-adjacent]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  acceptance:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 26.9.0
+          package-manager-cache: false
+      - name: Download and verify original input bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $dir="$env:RUNNER_TEMP/inputs"
+          mkdir $dir
+          gh run download 41397555978 -n windows-desktop-candidate -D $dir
+          if ($LASTEXITCODE) {exit $LASTEXITCODE}
+          $exe=Get-Item "$dir/*setup.exe"
+          if ($exe.Length -ne 176990255 -or (Get-FileHash $exe).Hash -ne 'd625ab6b87341b776480e22b0fe1c303b12ad793ad89b4f75e64807b394e6b31') {throw 'Wrong installer'}
+          if ((Get-FileHash "$dir/*source.tar.gz").Hash -ne 'c56f549b52a39a0f415b72affff4827b4773927363047cd9775302517c9f0c17') {throw 'Wrong source'}
+          curl.exe -fLsS https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.1/chuangzuoyoushu-0.1.1-windows-x64.zip -o "$dir/legacy.zip"
+          if ($LASTEXITCODE) {exit $LASTEXITCODE}
+          Get-Item $exe -Stream *
+          npm install --prefix .qa336 --ignore-scripts --no-fund --no-audit @playwright/test@1.63.0
+      - name: Test original installer in interactive desktop
+        run: |
+          node --test scripts/release/windows-electron/policy.test.cjs
+          if ($LASTEXITCODE) {exit $LASTEXITCODE}
+          node .qa336/adjacent.mjs "$env:RUNNER_TEMP/inputs/chuangzuoyoushu-0.1.2-windows-x64-setup.exe" "$env:RUNNER_TEMP/inputs/legacy.zip" "$env:RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: adjacent-desktop-evidence
+          path: ${{ runner.temp }}/evidence/
