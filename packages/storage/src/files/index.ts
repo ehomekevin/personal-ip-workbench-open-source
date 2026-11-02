@@ -34,7 +34,12 @@ export function parseRevision(bytes: string): { metadata: RevisionMetadata; text
   } catch { throw new ContractError('STORAGE_UNAVAILABLE', '修订文件身份信息无效'); }
   return { metadata: metadata as unknown as RevisionMetadata, text: bytes.slice(end + 5) };
 }
-function flushDirectory(path: string) { const fd = openSync(path, 'r'); try { fsyncSync(fd); } finally { closeSync(fd); } }
+function flushDirectory(path: string): void {
+  // Node cannot fsync a directory on Windows. Revision and backup file descriptors are flushed separately.
+  if (process.platform === 'win32') return;
+  const fd = openSync(path, 'r');
+  try { fsyncSync(fd); } finally { closeSync(fd); }
+}
 function rejectLinkedPath(path: string): void {
   let cursor = resolve(path);
   while (cursor !== dirname(cursor)) {
