@@ -70,18 +70,18 @@ async function ports() {
   }
 }
 
-async function start() {
+async function start(startCommand = '创作有数.cmd', stopCommand = '退出创作有数.cmd') {
   assert(!app);
   // A fixed command and cwd preserve Unicode and spaces without interpolating paths into cmd.exe.
-  const child = spawn(cmd, ['/d', '/c', 'Start.cmd'], { cwd: program, env, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(cmd, ['/d', '/c', startCommand], { cwd: program, env, stdio: ['ignore', 'pipe', 'pipe'] });
   const closed = new Promise((ok, fail) => { child.once('error', fail); child.once('close', ok); });
   child.stdout.resume();
-  const instance = { child, closed, stderr: '' };
+  const instance = { child, closed, stopCommand, stderr: '' };
   child.stderr.setEncoding('utf8');
   child.stderr.on('data', chunk => { instance.stderr = (instance.stderr + chunk).slice(-8192); });
   app = instance;
   for (let i = 0; i < 180; i++) {
-    if (child.exitCode !== null || child.signalCode !== null) throw Error('Start.cmd exited before readiness, code ' + child.exitCode + ', signal ' + child.signalCode);
+    if (child.exitCode !== null || child.signalCode !== null) throw Error(startCommand + ' exited before readiness, code ' + child.exitCode + ', signal ' + child.signalCode);
     try {
       const health = await fetch(origin + '/health', { signal: AbortSignal.timeout(800) });
       if (health.ok && (await health.json()).status === 'ready') return;
@@ -93,9 +93,9 @@ async function start() {
 
 async function stop() {
   if (!app) return;
-  const { child, closed } = app;
+  const { child, closed, stopCommand } = app;
   if (child.exitCode === null && child.signalCode === null) {
-    execFileSync(cmd, ['/d', '/c', 'Stop.cmd'], { cwd: program, env, timeout: 30000, stdio: 'pipe' });
+    execFileSync(cmd, ['/d', '/c', stopCommand], { cwd: program, env, timeout: 30000, stdio: 'pipe' });
   }
   const signal = AbortSignal.timeout(30000);
   const timedOut = new Promise((_, reject) => signal.addEventListener('abort', () => reject(Error('Start.cmd still running after Stop.cmd')), { once: true }));
@@ -124,16 +124,16 @@ async function api(id, path, body) {
   return response.json();
 }
 
-async function readTopic(expectedIdentity) {
+async function readTopic(expectedIdentity, title = topicTitle) {
   const id = await identity();
   assert(id.workspace_id === expectedIdentity.workspace_id && id.service_instance_id === expectedIdentity.service_instance_id, 'workspace identity changed');
-  const topic = (await api(id, 'topics')).items.find(row => row.title === topicTitle);
+  const topic = (await api(id, 'topics')).items.find(row => row.title === title);
   assert(topic, 'manually saved topic missing');
   return api(id, 'topics/' + topic.id);
 }
 
 async function checkRevision(id, original, revisionId) {
-  const topic = await readTopic(id);
+  const topic = await readTopic(id, original.title);
   assert.equal(topic.core_document_id, original.core_document_id);
   assert.equal(topic.core.head_revision_id, revisionId);
   assert.equal(topic.core.text, manualText);
@@ -182,7 +182,7 @@ try {
     const bound = listeners.filter(row => row.port === port);
     assert(bound.length && bound.every(row => row.bundled && row.address === '127.0.0.1'), 'wrong listener or executable');
   }
-  pass('Start.cmd, loopback web/API, bundled process, isolated default data');
+  pass('创作有数.cmd, loopback web/API, bundled process, isolated default data');
   phase = 'browser';
   report.browser = await checkBrowser(origin, version, output);
   phase = 'manual revision';
@@ -196,12 +196,39 @@ try {
   pass('Real browser, manual save, update notices and network boundaries');
   phase = 'restart';
   await stop(); await start(); await checkRevision(first, topic, saved.revision_id); await stop();
-  pass('Stop.cmd and restart preserve workspace, core document, manual revision and text');
+  pass('退出创作有数.cmd and restart preserve workspace, core document, manual revision and text');
   phase = 'program-directory change';
   const next = join(tmp, '新版本 程序目录');
   renameSync(program, next); program = next;
   await start(); await checkRevision(first, topic, saved.revision_id); await stop();
   pass('Move extracted program and read the same manual revision and text');
+  phase = 'upgrade from released v0.1.0';
+  const previousZip = join(tmp, 'v0.1.0.zip');
+  const previousName = 'personal-ip-workbench-0.1.0-windows-x64.zip';
+  const response = await fetch('https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/' + previousName, { signal: AbortSignal.timeout(120000) });
+  assert.equal(response.status, 200, 'download official previous release');
+  writeFileSync(previousZip, Buffer.from(await response.arrayBuffer()));
+  report.previousZipSha256 = hash(previousZip);
+  assert.equal(report.previousZipSha256, 'cb17c7678f3bd5cac4ffd245991b269d7d1f8e7887630868232c952bc0dabc02');
+  program = join(tmp, '原始 0.1.0');
+  ps('Expand-Archive -LiteralPath $env:TEST_ZIP -DestinationPath $env:TEST_DEST', { TEST_ZIP: previousZip, TEST_DEST: program });
+  env.LOCALAPPDATA = join(tmp, '升级 用户数据');
+  mkdirSync(env.LOCALAPPDATA);
+  await start('Start.cmd', 'Stop.cmd');
+  const oldIdentity = await identity();
+  const oldTitle = '0.1.0 保存的手工稿';
+  await api(oldIdentity, 'topics', { title: oldTitle, category: '个人思考', audience: '', source_ids: [] });
+  const oldTopic = await readTopic(oldIdentity, oldTitle);
+  const oldRevision = await api(oldIdentity, 'documents/' + oldTopic.core_document_id + '/revisions', {
+    expected_revision_id: oldTopic.core.head_revision_id, text: manualText, origin: 'human',
+  });
+  assert(oldRevision.revision_id);
+  await stop();
+  program = next;
+  await start();
+  await checkRevision(oldIdentity, oldTopic, oldRevision.revision_id);
+  await stop();
+  pass('Upgrade released v0.1.0 to the final ZIP and retain workspace, old manual revision and text');
   report.status = 'passed';
 } catch (error) {
   report.status = 'failed';

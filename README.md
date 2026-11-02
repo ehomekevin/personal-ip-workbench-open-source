@@ -42,9 +42,10 @@ pnpm dev:web
 
 **开始保存自己的稿件**，按[安装与升级指南](GETTING_STARTED.md)创建 **real** 工作区。页面连接本机服务，配置、SQLite 数据库、笔记和媒体保存在你选择的数据目录。换用新版程序时，沿用这个工作区即可继续编辑。
 
-**Mac Apple Silicon 用户**可直接下载 v0.1.0。最低 macOS 27.0，已在 27.0.1 实测。下载并校验 ZIP 后，双击解压，再打开「创作有数.app」。应用已通过 Apple 公证。稿件默认保存在 `~/Library/Application Support/PersonalIPWorkbench`。[下载 Mac 版](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-arm64.zip) · [Mac 校验文件](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-arm64.zip.sha256) · [Mac 包装源码](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-packaging-source.zip)
+**Mac Apple Silicon 用户**可直接下载 v0.1.0。最低 macOS 27.0，已在 27.0.1 实测。下载并校验 ZIP 后，双击解压，再打开「创作有数.app」。退出时在应用菜单选择「退出创作有数」或按 ⌘Q。应用已通过 Apple 公证。稿件默认保存在 `~/Library/Application Support/PersonalIPWorkbench`。[下载 Mac 版](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-arm64.zip) · [Mac 校验文件](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-arm64.zip.sha256) · [Mac 包装源码](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases/download/v0.1.0/chuangzuoyoushu-0.1.0-macos-packaging-source.zip)
 
-**Windows x64 用户**可在 [Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 查看正式提供的便携 ZIP 和校验清单。下载后按[便携版说明](GETTING_STARTED.md#windows-x64-便携版)核对文件，解压并双击 `Start.cmd`。若发行页还没有公开版本，可先使用上面的源码方式。
+**Windows x64 用户**可在 [Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 下载便携 ZIP 和同版校验清单，按[安装指南](GETTING_STARTED.md#windows-x64-便携版)解压。v0.1.0 双击 `Start.cmd` 启动，用 `Stop.cmd` 退出。新版中文入口为 `创作有数.cmd` 和 `退出创作有数.cmd`。
+
 
 ## 可选连接与开发说明
 

@@ -25,7 +25,7 @@ if (process.platform !== 'win32' || process.arch !== 'x64' || process.versions.n
 const output = process.argv[2];
 if (!output || !isAbsolute(output)) throw new Error('Usage: node scripts/release/windows/build.mjs ABSOLUTE_OUTPUT_DIRECTORY');
 if (git('status', '--porcelain', '--untracked-files=normal')) throw new Error('Build from a clean checkout');
-const fileName = `personal-ip-workbench-${manifest.version}-windows-x64.zip`;
+const fileName = `chuangzuoyoushu-${manifest.version}-windows-x64.zip`;
 const finalZip = join(output, fileName);
 if (existsSync(finalZip)) throw new Error(`Refusing to replace ${finalZip}`);
 const scratch = mkdtempSync(join(tmpdir(), 'workbench-windows-'));
@@ -114,12 +114,15 @@ try {
   if (!existsSync(join(web, 'index.html'))) throw new Error('Build the frontend with pnpm build:web first');
   cpSync(web, join(stage, 'web'), { recursive: true });
   for (const file of ['LICENSE', 'THIRD_PARTY_NOTICES.md', 'GETTING_STARTED.md']) copy(join(root, file), join(stage, file));
-  for (const cmd of ['Start.cmd', 'Stop.cmd']) writeFileSync(join(stage, cmd), readFileSync(join(here, cmd), 'utf8').replace(/\r?\n/g, '\r\n'));
+  for (const [source, branded] of [['Start.cmd', '创作有数.cmd'], ['Stop.cmd', '退出创作有数.cmd']]) {
+    const text = readFileSync(join(here, source), 'utf8').replace(/\r?\n/g, '\r\n');
+    for (const name of [source, branded]) writeFileSync(join(stage, name), text);
+  }
   copy(join(here, 'launcher.mjs'), join(runtime, 'launcher.mjs'));
   jsonFile(join(stage, 'release.json'), { version: manifest.version, commit: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'),
     platform: 'win32', arch: 'x64', nodeVersion, nodeUrl, nodeArchiveSha256, nodeExeSha256, thirdParty });
   const zip = join(scratch, fileName);
-  execFileSync('tar.exe', ['-a', '-cf', zip, '-C', stage, ...readdirSync(stage)]);
+  execFileSync('python', ['-m', 'zipfile', '-c', zip, ...readdirSync(stage)], { cwd: stage });
   mkdirSync(output, { recursive: true });
   copyFileSync(zip, finalZip, constants.COPYFILE_EXCL);
   console.log(`${sha(readFileSync(finalZip))}  ${fileName}`);
