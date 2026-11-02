@@ -44,6 +44,8 @@ export async function checkBrowser(origin, version, output) {
             : { message: scenario } });
         });
         await page.goto(origin, { waitUntil: 'domcontentloaded' });
+        await expect(page).toHaveTitle('创作有数');
+        if (width === 1440) await expect(page.locator('.sidebar .brand strong')).toHaveText('创作有数');
         await expect(page.locator('#crumb')).toContainText('今日工作台');
         await page.waitForFunction(() => localStorage.getItem('workbench:stable-release:v1') !== null);
         const notice = page.getByRole('complementary', { name: '版本更新' });
