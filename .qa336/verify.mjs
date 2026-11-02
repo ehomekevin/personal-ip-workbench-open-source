@@ -172,6 +172,12 @@ try {
   assert(report.initialSearch.clicked,JSON.stringify(report.initialSearch));
   report.initialWindow=native('capture',{TEST_SCREEN:'first-search-app.png'});
   assert.equal(report.initialWindow.pid,report.initialSearch.pid);
+  const uiText=originalText+' 一次开始菜单原生窗口修改。';
+  function uiEditor(expect,save,capture){return execFileSync('pwsh',['-STA','-NoLogo','-NoProfile','-File',join(import.meta.dirname,'editor.ps1'),'-ExpectText',expect,'-SaveText',save,'-Capture',capture],{env,encoding:'utf8',timeout:90000});}
+  function directDoc(){return fetch('http://127.0.0.1:'+apiPort+'/api/v1/documents/'+topic.core_document_id,{headers:{'X-Workspace-Id':id.workspace_id,'X-Service-Instance-Id':id.service_instance_id,'X-Request-Id':randomUUID()}}).then(r=>r.json());}
+  let firstText=originalText;
+  try {uiEditor(originalText,uiText,'first-search-edited');const doc=await until(async()=>{const doc=await directDoc();return doc.text===uiText&&doc;},'native search editor persisted');report.searchEdited=doc.head_revision_id;firstText=uiText;}
+  catch(e){report.searchEditorError=String(e).slice(0,1600);const doc=await directDoc();if(doc.text===uiText) firstText=uiText;}
   native('close');await until(()=>native('processes').length===0,'initial search exit');
   phase='first Electron start';
   let page=await application();
@@ -186,7 +192,7 @@ try {
   assert.equal(browser.contexts()[0].pages().length,1);
   mark('Second installed shortcut launch kept one native window and one owned sidecar');
   phase='open old draft, image and history inside installed window';
-  await inspect(page,originalText,'old');
+  await inspect(page,firstText,'old');
   mark('Old text, previous platform revision and original PNG opened in the installed main window');
   phase='edit and normal exit';
   await clickTab(page,'core');
@@ -206,6 +212,7 @@ try {
       assert.equal(identity.workspace_id,id.workspace_id);assert.equal(identity.service_instance_id,id.service_instance_id);
       const document=await json('documents/'+topic.core_document_id);
       assert.equal(document.head_revision_id,lastRevision);assert.equal(document.text,changedText);
+      try {uiEditor(changedText,'','second-search-editor');report.searchReopenedEditor=true;} catch(e){report.searchReopenedEditorError=String(e).slice(0,1600);}
       report.search.window=native('capture',{TEST_SCREEN:'start-menu-cold-launch-desktop.png'});
       assert.equal(report.search.window.pid,report.search.pid);
       mark('Clicked named Windows Search result from cold state and read the saved draft from its installed sidecar');
