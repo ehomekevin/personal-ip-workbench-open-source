@@ -40,9 +40,18 @@ try {
   $core = (New-Item "$stage/resources/core" -ItemType Directory).FullName
   # Windows tar fails even when only scanning the old ZIP's UTF-8 launcher names.
   [IO.Compression.ZipFile]::ExtractToDirectory($coreZip, "$scratch/legacy")
-  foreach ($file in 'app','web','licenses','LICENSE','THIRD_PARTY_NOTICES.md','release.json') {
+  foreach ($file in 'app','licenses','LICENSE','THIRD_PARTY_NOTICES.md','release.json') {
     Move-Item -LiteralPath "$scratch/legacy/$file" -Destination $core
   }
+  # The original Web code reads its displayed/update version from the root package during Vite build.
+  $root = (Resolve-Path "$PSScriptRoot/../../..").Path
+  Push-Location $root
+  try {
+    if ((Get-Content package.json -Raw | ConvertFrom-Json).version -ne $package.version) { throw 'Desktop and Web versions must agree' }
+    pnpm install --frozen-lockfile
+    pnpm build:web
+    Copy-Item -LiteralPath 'apps/web/dist' -Destination "$core/web" -Recurse
+  } finally { Pop-Location }
   New-Item "$core/runtime" -ItemType Directory | Out-Null
   Move-Item -LiteralPath "$scratch/legacy/runtime/node.exe" -Destination "$core/runtime"
   $base = Get-Content "$core/release.json" -Raw | ConvertFrom-Json

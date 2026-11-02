@@ -110,7 +110,6 @@ async function inspect(page,text,label) {
   await page.locator('#nav [data-page="create"]').click();
   await clickTab(page,'core');
   await expect(page.locator('#core-editor')).toHaveValue(text);
-  await page.locator('#core-editor').scrollIntoViewIfNeeded();
   await page.screenshot({path:join(output,label+'-editor-renderer.png')});
   report[label+'Desktop']=native('capture',{TEST_SCREEN:label+'-editor-desktop.png'});
   await clickTab(page,'versions');

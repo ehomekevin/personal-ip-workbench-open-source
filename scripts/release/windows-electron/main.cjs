@@ -46,7 +46,7 @@ async function open(url) {
   ses.webRequest.onHeadersReceived({ urls: ['http://127.0.0.1/*'] }, (details, done) => {
     if (new URL(details.url).origin !== origin) return done({});
     done({ responseHeaders: { ...details.responseHeaders, 'Content-Security-Policy': [
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      "default-src 'self'; connect-src 'self' blob: https://api.github.com/repos/ehomekevin/personal-ip-workbench-open-source/releases/latest; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
     ] } });
   });
   win = new BrowserWindow({ title: name, icon: join(__dirname, 'icon.ico'), width: 1280, height: 850, show: false,
