@@ -1,85 +1,51 @@
-# Personal IP Workbench
+# 创作者工作台 · Personal IP Workbench
 
-**从资料到成稿，把一条内容做完整。**
+给自己运营账号的创作者用的本地工作台。可以从一份资料起稿，分别维护公众号、小红书、X、抖音和 B 站版本，再按平台排期、记录反馈，把读者的问题带回下一篇。
 
-Personal IP Workbench 是面向个人创作者的本地工作台。把收集的资料、自己的观点、核心稿、不同平台的版本、配图和排期放在同一个创作流程里，再把复盘结果带回下一篇内容。
+一段会议录音，准备写成一篇公众号文章，再拆成一条小红书笔记。两篇稿子用的是同一个例子，开头、配图和发布时间却各不相同。创作者工作台让你在一个主题里保留原始资料、自己的判断和各个平台的稿子。下次打开，就能接着改上次那一稿。
 
-资料和稿件保存在自己的工作区。你可以先用演示模式体验界面，再按需要连接 AI 执行器、内容来源与平台账号。
+[个人站中文上手说明](https://ai.flowo.design/products/creator-workbench/) · [安装与升级指南](GETTING_STARTED.md) · [查看发行版本](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases)
 
-![今日工作台：继续创作、阅读资料与查看排期](docs/project-introduction/images/overview.png)
+![今日工作台，左侧可切换创作、排期与复盘，中间可继续上次的主题](docs/project-introduction/images/overview.png)
 
-> 截图使用合成演示资料与示例指标，不代表真实账号运营结果。
+*这是工作台实际运行的演示界面。截图中的题目、资料和指标均为合成示例。*
 
-## 可以用它做什么
+## 跟着一条选题走一遍
 
-- **积累有出处的资料**：阅读、收藏和搜索资料，把值得展开的内容关联到创作主题。
-- **从自己的观点开始写**：先保存想表达的内容，再形成核心稿，比较 AI 候选、人工修改和历史版本。
-- **维护不同平台的表达**：在一个主题下分别编辑小红书、公众号、X、抖音和 B 站的内容版本。
-- **管理配图与版式**：整理图片素材、安排文章配图、调整版式；需要生成图片时再接入对应服务。
-- **安排发布并保留复盘**：记录排期与发布状态，把采用的复盘意见转成后续创作主题。
+打开演示工作台，进入「信息与对标」，选择「AI 会议纪要：先核对行动项，再谈省时」，点资料卡右下角的 **「转为创作选题」**。卡片保留了要核对的依据，如原始录音、人工纪要和 AI 纪要。示例中三项都标着「待补」，正好可以从这里记下还缺什么。
 
-![信息与对标：阅读资料并关联创作主题](docs/project-introduction/images/sources.png)
+![选中的会议纪要资料卡、待补的三项依据，以及右下角的转为创作选题入口](docs/project-introduction/images/sources.png)
 
-## 一条内容怎样完成
+1. **把判断写进核心稿。** 在核心稿的「我的表达角度」写下你最想讲的一句，例如「纪要有没有用，要看散会后谁知道自己该做什么」。核心稿围绕一个片段展开，写清任务、负责人和待确认的问题。没核实的地方先留空，日后拿到录音再补。
 
-资料 → 你的观点 → 核心稿 → 平台版本 → 配图与排期 → 复盘
+   ![会议纪要主题的核心稿编辑页，上方可回看资料依据，下方可确认核心稿](docs/project-introduction/images/core-editor.png)
 
-AI 生成内容先作为候选，由你决定是否采用。核心稿和平台稿分别保存，修改一个平台的文字不会替换其他平台的稿件。
+   *写到拿不准的地方，点编辑区上方的「资料依据」回看原条目。核完事实和观点，点「确认核心稿」，再选「制作平台版本」。*
 
-## 安装发行版与接收更新
+2. **给两个平台不同的读法。** 公众号稿可以先列原话，再列对应的纪要，在讲到负责人时插入对照图。小红书稿可以把同一段改成三张检查卡，分别问「做什么」「谁来做」「何时交付」。平台稿分别保存，改短一张卡片时，公众号的段落和核心稿仍然可用。一个主题也可以维护 X、抖音和 B 站的版本。
+3. **从排期接到下一条选题。** 在「排期与发布」为两篇稿子分别安排时间，发布后记录对应作品。到「数据复盘」时，可以把读者追问留作下一篇的起点。例如有人问「会议里根本没指定负责人怎么办」，就值得单独写一篇。
 
-从 [GitHub Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 选择 Windows x64 便携 ZIP 或源码包，并下载 `SHA256SUMS`。Windows 用户校验并解压后双击 `Start.cmd` 即可打开本地工作台。安装、数据目录和升级步骤见[安装与升级指南](GETTING_STARTED.md)。下方的 Git 命令适用于从仓库体验源码。
+这些写法和读者问题用于演示创作过程。你可以换成自己的资料，手工推进整篇内容。连接 AI 后，生成的文字先作为候选，由你决定采用哪一版。
 
-网页工作台使用构建时根 `package.json` 的版本，向本仓库查询最新稳定 Release。有更新时会显示版本和发布说明，你可以继续编辑、关闭提醒，或按指南手动升级。检查结果缓存在本机浏览器，离线或 GitHub 限流时仍可照常使用。查询无需登录，不发送工作区身份、稿件或用量统计。
+## 在自己的电脑上打开
 
-## 快速体验
-
-使用 Node.js 26.9.0 和 pnpm 10.32.1：
+**想先试界面**，准备 Node.js `26.9.0` 和 pnpm `10.32.1`，在终端启动演示页面。
 
 ```sh
 git clone https://github.com/ehomekevin/personal-ip-workbench-open-source.git
 cd personal-ip-workbench-open-source
-```
-
-在源码根目录运行：
-
-```sh
 pnpm install --frozen-lockfile
 pnpm dev:web
 ```
 
-打开终端给出的本地地址。默认演示模式不需要模型或平台凭据。
+打开终端显示的本机地址，默认进入 **demo**。这里的数据是示例，修改保存在当前浏览器，体验时不需要模型密钥。
 
-创建自己的持久化工作区：
+**开始保存自己的稿件**，按[安装与升级指南](GETTING_STARTED.md)创建 **real** 工作区。页面连接本机服务，配置、SQLite 数据库、笔记和媒体保存在你选择的数据目录。换用新版程序时，沿用这个工作区即可继续编辑。
 
-```sh
-pnpm init:workspace --mode real --dir ./runtime/local --port 4318
-pnpm build:web
-WORKBENCH_CONFIG_PATH="$(pwd -P)/runtime/local/config.json" \
-WORKBENCH_WEB_ROOT="$(pwd -P)/apps/web/dist" \
-WORKBENCH_WEB_PORT=5180 \
-node scripts/runtime/local-server.ts
-```
+**Windows x64 用户**可在 [Releases](https://github.com/ehomekevin/personal-ip-workbench-open-source/releases) 查看正式提供的便携 ZIP 和校验清单。下载后按[便携版说明](GETTING_STARTED.md#windows-x64-便携版)核对文件，解压并双击 `Start.cmd`。若发行页还没有公开版本，可先使用上面的源码方式。
 
-打开 `http://127.0.0.1:5180/`。`real` 表示连接本地服务，不表示模型和平台已经接通。初始化会创建独立身份和配置，不覆盖已有工作区。
+## 可选连接与开发说明
 
-## 按需连接外部能力
+AI 写作、资料采集、生图、语音和平台发布分别使用你配置的执行器、服务或平台账号。启用外部服务时，相应任务输入会发送给它。能否直接发布取决于平台、账号权限和连接状态。部分音视频处理需要 `ffmpeg` 和 `ffprobe`。
 
-基础工作台可以先运行起来。AI 写作需要自行配置执行器或 API；资料采集、生图、语音和发布需要对应服务与账号权限，部分媒体处理需要 ffmpeg / ffprobe。外部服务的订阅、模型和凭据不包含在源码中。
-
-本地优先指工作区和状态保存在本机；启用外部服务后，相应任务输入仍会发送给你配置的服务。多平台稿件编辑不等于所有平台均支持自动发布，实际可用能力以连接状态为准。
-
-## 给开发者
-
-前端使用 React、TypeScript 与 Vite，本地服务使用 Node.js 和 SQLite。业务规则、存储、外部适配器和公共契约分包维护，提供 MCP 与宿主插件入口。
-
-```sh
-pnpm ci:check
-pnpm build:plugins
-pnpm exec playwright install chromium
-pnpm test:e2e:portable
-```
-
-自有代码采用 MIT，第三方依赖与协议 schema 保留各自许可。模块和开发入口见 `docs/architecture.md`，第三方许可见 `THIRD_PARTY_NOTICES.md`。
-
-详细的本地工作区配置、启动检查和开发方式见 [安装与配置指南](GETTING_STARTED.md)。
+工作台使用 React、TypeScript、Node.js 和 SQLite，提供 MCP 与宿主插件入口。自有代码采用 MIT，第三方组件保留各自许可。[模块与开发入口](docs/architecture.md) · [MIT 许可证](LICENSE) · [第三方说明](THIRD_PARTY_NOTICES.md)
