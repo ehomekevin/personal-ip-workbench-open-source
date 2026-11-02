@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 public static class WindowTest {
   private delegate bool EnumProc(IntPtr h,IntPtr arg);
   [DllImport("user32.dll")] private static extern bool EnumChildWindows(IntPtr h,EnumProc proc,IntPtr arg);
-  [DllImport("user32.dll", CharSet=CharSet.Unicode)] private static extern int GetWindowText(IntPtr h,System.Text.StringBuilder text,int count);
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] private static extern IntPtr SendMessageTimeout(IntPtr h,uint msg,IntPtr count,System.Text.StringBuilder text,uint flags,uint timeout,out IntPtr result);
   [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr h);
   [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr h);
   [DllImport("user32.dll")] private static extern bool PostMessage(IntPtr h,uint msg,IntPtr w,IntPtr l);
@@ -15,7 +15,7 @@ public static class WindowTest {
     bool found=false;
     EnumChildWindows(window,(h,arg)=>{
       if (!IsWindowVisible(h)||!IsWindowEnabled(h)) return true;
-      var text=new System.Text.StringBuilder(128); GetWindowText(h,text,text.Capacity);
+      var text=new System.Text.StringBuilder(128); IntPtr result; SendMessageTimeout(h,0x000D,(IntPtr)text.Capacity,text,2,500,out result);
       var label=text.ToString().Replace("&","").Trim();
       if (!System.Text.RegularExpressions.Regex.IsMatch(label,@"^(安装|完成|下一步)(\([A-Z]\))?\s*>?$|^(Install|Finish|Next\s*>?)$")) return true;
       found=PostMessage(h,0x00F5,IntPtr.Zero,IntPtr.Zero); return !found;
