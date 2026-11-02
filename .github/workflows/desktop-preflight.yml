@@ -35,7 +35,7 @@ jobs:
           }
           snap 'desk-before'
           if (!$shell -or !$sid) {throw 'No same-session interactive Explorer'}
-          [Input]::keybd_event(0x5B,0,0,0); [Input]::keybd_event(0x5B,0,2,0)
+          [Input]::keybd_event(0x5B,0,0,[UIntPtr]::Zero); [Input]::keybd_event(0x5B,0,2,[UIntPtr]::Zero)
           Start-Sleep -Seconds 2
           (New-Object -ComObject WScript.Shell).SendKeys('notepad')
           Start-Sleep -Seconds 3
@@ -48,7 +48,7 @@ jobs:
           if (!$hit) {throw 'No visible Notepad result'}
           $r=$hit.Current.BoundingRectangle
           if (![Input]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))) {throw 'cursor failed'}
-          [Input]::mouse_event(2,0,0,0,0); [Input]::mouse_event(4,0,0,0,0)
+          [Input]::mouse_event(2,0,0,0,[UIntPtr]::Zero); [Input]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
           Start-Sleep -Seconds 3
           Get-Process notepad -ErrorAction Stop | Select SessionId,MainWindowTitle
           snap 'desk-click'
