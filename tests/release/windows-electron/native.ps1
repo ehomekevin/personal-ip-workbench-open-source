@@ -5,6 +5,23 @@ Add-Type @'
 using System;
 using System.Runtime.InteropServices;
 public static class WindowTest {
+  private delegate bool EnumProc(IntPtr h,IntPtr arg);
+  [DllImport("user32.dll")] private static extern bool EnumChildWindows(IntPtr h,EnumProc proc,IntPtr arg);
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] private static extern int GetWindowText(IntPtr h,System.Text.StringBuilder text,int count);
+  [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr h);
+  [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr h);
+  [DllImport("user32.dll")] private static extern bool PostMessage(IntPtr h,uint msg,IntPtr w,IntPtr l);
+  public static bool WizardNext(IntPtr window) {
+    bool found=false;
+    EnumChildWindows(window,(h,arg)=>{
+      if (!IsWindowVisible(h)||!IsWindowEnabled(h)) return true;
+      var text=new System.Text.StringBuilder(128); GetWindowText(h,text,text.Capacity);
+      var label=text.ToString().Replace("&","").Trim();
+      if (!System.Text.RegularExpressions.Regex.IsMatch(label,@"^(安装|完成|下一步)(\([A-Z]\))?\s*>?$|^(Install|Finish|Next\s*>?)$")) return true;
+      found=PostMessage(h,0x00F5,IntPtr.Zero,IntPtr.Zero); return !found;
+    },IntPtr.Zero);
+    return found;
+  }
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hwnd);
   [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
   [DllImport("user32.dll")] public static extern void keybd_event(byte key,byte scan,uint flags,UIntPtr extra);
@@ -47,21 +64,16 @@ switch ($Action) {
       $screen = 'not_run'
     } else {
       $p = Start-Process -FilePath $env:TEST_SETUP -ArgumentList $opts -PassThru
-      $mode = 'UI Automation, installation wizard'
+      $mode = 'Win32 button click, installation wizard'
       $screen = 'not_run'
       $deadline = (Get-Date).AddSeconds(100)
       while (-not $p.HasExited -and (Get-Date) -lt $deadline) {
         $child = @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($p.Id)" | Select-Object -ExpandProperty ProcessId)
         foreach ($procId in (@($p.Id) + $child)) {
-          $window = $root.FindFirst([System.Windows.Automation.TreeScope]::Children,(Equal $ui::ProcessIdProperty ([int]$procId)))
-          if (!$window) { continue }
-          if ($screen -ne 'captured') { $screen = TryCapture (Join-Path $env:TEST_REPORT 'installer-desktop.png') }
-          $buttons = $window.FindAll($all,(Equal $ui::ControlTypeProperty ([System.Windows.Automation.ControlType]::Button)))
-          foreach ($button in $buttons) {
-            if ($button.Current.IsEnabled -and $button.Current.Name.Replace('&','') -match '^(Next\s*>?|Install|Finish|OK|下一步.*|安装.*|完成.*|确定.*)$') {
-              $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
-              break
-            }
+          foreach ($window in $root.FindAll([System.Windows.Automation.TreeScope]::Children,(Equal $ui::ProcessIdProperty ([int]$procId)))) {
+            if ($window.Current.IsOffscreen -or $window.Current.Name -notmatch '创作有数') { continue }
+            if ($screen -ne 'captured') { $screen = TryCapture (Join-Path $env:TEST_REPORT 'installer-desktop.png') }
+            [void][WindowTest]::WizardNext([IntPtr]$window.Current.NativeWindowHandle)
           }
         }
         Start-Sleep -Milliseconds 300
