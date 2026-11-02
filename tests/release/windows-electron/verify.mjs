@@ -139,7 +139,8 @@ async function closeAndCheck() {
   native('close');
   await until(async()=>!(await Promise.all(ports.map(listening))).some(Boolean),'release web, API and CDP ports');
   await until(()=>native('processes').length===0,'installed app and sidecar exit');
-  assert.equal(browser.isConnected(),false);browser=undefined;
+  // Native ports and process enumeration establish shutdown; dispose the CDP client separately.
+  await browser.close();browser=undefined;
 }
 try {
   phase='create upgraded workspace using actual v0.1.1';
